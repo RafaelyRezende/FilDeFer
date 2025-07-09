@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/09 19:05:29 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/09 20:45:18 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 // LEAKS ON LEAKS
 //
-t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncols)
+static t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncols)
 {
 	t_vec3	*matrix;
 	int	*xvals;
@@ -40,6 +40,21 @@ t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncols)
 		return (free(xvals), free(yvals), free(zvals), NULL);
 	}
 	return (matrix);
+}
+
+static void	ft_free_vec(t_vec3 *matrix)
+{
+	if (*matrix)
+	{
+		if (!(matrix->x_i))
+			free(matrix->x_i);
+		if (!(matrix->y_i))
+			free(matrix->y_i);
+		if (!(matrix->z_i))
+			free(matrix->z_i);
+	}
+	free(matrix);
+	return ;
 }
 
 t_vec3	*ft_parser(char *av)
@@ -67,11 +82,6 @@ t_vec3	*ft_parser(char *av)
 		}
 	}
 	close(fd);
-	while (i >= 0)
-	{
-		i--;
-		free(buffer[i]);
-	}
 	free(buffer);
 	return (map);
 }
