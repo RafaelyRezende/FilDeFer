@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/08 20:26:30 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/09 15:36:50 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_draw_line(t_window *img, t_point p1, t_point p2)
 		{
 			p1.x += inc_x;
 			p1.y += inc_y;
-			p0 += l1.two_dy - l1.dx;
+			p0 += l1.two_dy - 2 * l1.dx;
 		}
 		//printf("(%d,%d)\n",p1.x, p1.y)
 		//printf("(%d,%d)\n",p2.x, p2.y)
