@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/09 20:45:18 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/10 16:37:56 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 // LEAKS ON LEAKS
 //
+/*
 static t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncols)
 {
 	t_vec3	*matrix;
@@ -41,6 +42,7 @@ static t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncol
 	}
 	return (matrix);
 }
+*/
 
 static void	ft_free_vec(t_vec3 *matrix)
 {
@@ -57,6 +59,40 @@ static void	ft_free_vec(t_vec3 *matrix)
 	return ;
 }
 
+static int	ft_get_rows(int fd)
+{
+	char	*str;
+	int	i;
+
+	str = get_next_line(fd);
+	if (!str)
+		return (0);
+	i = 1;
+	while (str)
+	{
+		str = get_next_line(fd);
+		i++;
+	}
+	free(str);
+	return (i);
+}
+
+static int	ft_get_cols(char *tmp)
+{
+	char	**array;
+	int	i;
+
+	array = ft_split(tmp, ' ');
+	i = 0;
+	while (array[i])
+	{
+		i++;
+		free(array[i]);
+	}
+	free(array);
+	return (i);
+}
+
 t_vec3	*ft_parser(char *av)
 {
 	t_vec3	*map;
@@ -64,12 +100,16 @@ t_vec3	*ft_parser(char *av)
 	char	*str;
 	int	fd;
 	int	i;
+	int	j;
 
+	map->nrows = ft_get_rows(av);
+	map->ncols = ft_get_cols(av);
 	map->x_i = x_vals;
 	map->y_i = y_vals;
 	map->z_i = z_vals;
 	fd = open(av, O_RDONLY);
-	while ((str = get_next_line(fd)))
+	j = 0;
+	while (get_next_line(fd))
 	{
 		buffer = ft_split(str, ' ');
 		i = 0;
@@ -78,6 +118,7 @@ t_vec3	*ft_parser(char *av)
 			x_vals[i] = i;
 			y_vals[i] = i;
 			z_vals[i] = ft_atoi(buffer[i]);
+			free(buffer[i]);
 			i++;
 		}
 	}

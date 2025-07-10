@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/09 18:31:33 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/10 16:40:56 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ static void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
 	int	p0;
 	int	inc_x;
 	int	inc_y;
-	int	i;
 
-	i = 0;
 	if (p1.x > p2.x)
 	{
 		ft_swap(&p1.x, &p2.x);
@@ -38,7 +36,6 @@ static void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
 	ft_put_pixel(img, p1.x, p1.y, COLOR1);
 	while (p1.x < p2.x)
 	{
-		i++;
 		if (p0 < 0)
 			p0 += l1.two_dy;
 		else
