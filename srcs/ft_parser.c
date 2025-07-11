@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/11 18:55:39 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/11 20:17:54 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 // LEAKS ON LEAKS
 //
 
-static void	ft_free_vec(t_vec3 *matrix)
+static int	ft_free_vec(t_vec3 *matrix)
 {
 	if (matrix)
 	{
-		if (!(matrix->x_i))
+		if (matrix->x_i)
 			free(matrix->x_i);
-		if (!(matrix->y_i))
+		if (matrix->y_i)
 			free(matrix->y_i);
-		if (!(matrix->z_i))
+		if (matrix->z_i)
 			free(matrix->z_i);
 	}
 	free(matrix);
-	return ;
+	return (0);
 }
 
 static int	ft_get_rows(t_vec3 *matrix, char *av)
@@ -85,7 +85,7 @@ static int	ft_init_coord(t_vec3 *matrix)
 {
 	int	numE;
 
-	numE= matrix->nrows * matrix->ncols;
+	numE = matrix->nrows * matrix->ncols;
 	matrix->x_i = (int *)malloc(sizeof(int) * numE);
 	if (!matrix->x_i)
 		return (0);
@@ -115,51 +115,62 @@ static int	ft_fill_matrix(int fd, t_vec3 *matrix)
 	while (str)
 	{
 		j = 0;
-		buffer = ft_split(str);
+		buffer = ft_split(str, ' ');
+		free(str);
 		if (!buffer)
 			return (free(str), 0);
-		free(str);
-		while (buffer[j])
+		while (buffer[j] && j < matrix->ncols)
 		{
-			matrix->x_i[i + j * numE] = i;
-			matrix->y_i[i + j * numE] = j;
-			matrix->z_i[i + j * numE] = buffer[j]; 
+			matrix->x_i[i + j * matrix->ncols] = i;
+			matrix->y_i[i + j * matrix->ncols] = j;
+			matrix->z_i[i + j * matrix->ncols] = ft_atoi(buffer[j]); 
 			free(buffer[j]);
-			j++
+			j++;
 		}
+		str = get_next_line(fd);
 		i++;
 	}
+	free(buffer);
 	free(str);
+	return (i);
 }
 
 t_vec3	*ft_parser(char *av)
 {
 	t_vec3	*map;
-	int	i;
-	int	j;
+	int	fd;
 
 	map = (t_vec3 *) malloc(sizeof(t_vec3));
-	map->nrows = ft_get_rows(&map, av);
-	map->ncols = ft_get_cols(&map, av);
-	if (!ft_init_coord(&map))
+	map->nrows = ft_get_rows(map, av);
+	map->ncols = ft_get_cols(map, av);
+	if (!ft_init_coord(map))
 		return (NULL);
 	fd = open(av, O_RDONLY);
 	if (fd < 0)
 		return (NULL);
-	if (!ft_fill_matrix(fd, &matrix))
-		return (ft_free_vec);
+	if (!ft_fill_matrix(fd, map))
+		return (ft_free_vec(map), NULL);
 	close(fd);
-	free(buffer);
 	return (map);
 }
 
 int	main(void)
 {
 	char	*ptr;
-	t_vec3	matrix;
+	t_vec3	*matrix;
+	int	i;
+	int	numE;
 
+	i = 0;
 	ptr = "test_maps/10-2.fdf";
-	printf("%d\n", ft_get_rows(&matrix, ptr));
-	printf("%d\n", ft_get_cols(&matrix, ptr));
+	matrix = ft_parser(ptr);
+	numE = matrix->nrows * matrix->ncols;
+	while (i < numE)
+	{
+		printf("x: %d\n", matrix->x_i[i]);
+		printf("y: %d\n", matrix->y_i[i]);
+		printf("z: %d\n", matrix->z_i[i]);
+		i++;
+	}
+	return (ft_free_vec(matrix));
 }
-
