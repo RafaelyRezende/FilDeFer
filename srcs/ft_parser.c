@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/10 16:37:56 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:55:39 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,10 @@
 
 // LEAKS ON LEAKS
 //
-/*
-static t_vec3	*ft_init_vars(int xvals, int yvals, int zvals, int nrows, int ncols)
-{
-	t_vec3	*matrix;
-	int	*xvals;
-	int	*yvals;
-	int	*zvals;
-	int	size;
-
-	size = nrows * ncols;
-	matrix = (t_vec3 *)malloc(sizeof(t_vec3));
-	if (!matrix)
-		return (NULL);
-	xvals = (int *)malloc(sizeof(int) * size);
-	if (!xvals)
-		return (free(matrix), NULL);
-	yvals = (int *)malloc(sizeof(int) * size);
-	if (!yvals)
-		return (free(matrix), free(xvals), NULL);
-	zvals = (int *)malloc(sizeof(int) * size);
-	if (!zvals)
-	{
-		free(matrix); 
-		return (free(xvals), free(yvals), free(zvals), NULL);
-	}
-	return (matrix);
-}
-*/
 
 static void	ft_free_vec(t_vec3 *matrix)
 {
-	if (*matrix)
+	if (matrix)
 	{
 		if (!(matrix->x_i))
 			free(matrix->x_i);
@@ -59,70 +31,135 @@ static void	ft_free_vec(t_vec3 *matrix)
 	return ;
 }
 
-static int	ft_get_rows(int fd)
+static int	ft_get_rows(t_vec3 *matrix, char *av)
 {
 	char	*str;
 	int	i;
+	int	fd;
 
+	fd = open(av, O_RDONLY);
+	if (fd < 0)
+		return (0);
 	str = get_next_line(fd);
 	if (!str)
-		return (0);
-	i = 1;
+		return (free(str),0);
+	i = 0;
 	while (str)
 	{
+		free(str);
 		str = get_next_line(fd);
 		i++;
 	}
 	free(str);
+	matrix->nrows = i;
+	if (close(fd) == -1)
+		return (0);
 	return (i);
 }
 
-static int	ft_get_cols(char *tmp)
+static int	ft_get_cols(t_vec3 *matrix, char *av)
 {
-	char	**array;
+	char	**str;
+	char	*gnl;
+	int	fd;
 	int	i;
 
-	array = ft_split(tmp, ' ');
+	fd = open(av, O_RDONLY);
+	if (fd < 0)
+		return (0);
 	i = 0;
-	while (array[i])
-	{
-		i++;
-		free(array[i]);
-	}
-	free(array);
+	gnl = get_next_line(fd);
+	str = ft_split(gnl, ' ');
+	while (str && str[i])
+		free(str[i++]);
+	i--;
+	free(str);
+	free(gnl);
+	matrix->ncols = i;
+	if (close(fd) == -1 || i < 0)
+		return (0);
 	return (i);
+}
+
+static int	ft_init_coord(t_vec3 *matrix)
+{
+	int	numE;
+
+	numE= matrix->nrows * matrix->ncols;
+	matrix->x_i = (int *)malloc(sizeof(int) * numE);
+	if (!matrix->x_i)
+		return (0);
+	matrix->y_i = (int *)malloc(sizeof(int) * numE);
+	if (!matrix->y_i)
+		return (free(matrix->x_i), 0);
+	matrix->z_i = (int *)malloc(sizeof(int) * numE);
+	if (!matrix->z_i)
+	{
+		free(matrix->x_i);
+		return (free(matrix->y_i), free(matrix->z_i), 0);
+	}
+	return (1);
+}
+
+static int	ft_fill_matrix(int fd, t_vec3 *matrix)
+{
+	char	*str;
+	char	**buffer;
+	int	numE;
+	int	i;
+	int	j;
+
+	numE = matrix->nrows * matrix->ncols;
+	str = get_next_line(fd);
+	i = 0;
+	while (str)
+	{
+		j = 0;
+		buffer = ft_split(str);
+		if (!buffer)
+			return (free(str), 0);
+		free(str);
+		while (buffer[j])
+		{
+			matrix->x_i[i + j * numE] = i;
+			matrix->y_i[i + j * numE] = j;
+			matrix->z_i[i + j * numE] = buffer[j]; 
+			free(buffer[j]);
+			j++
+		}
+		i++;
+	}
+	free(str);
 }
 
 t_vec3	*ft_parser(char *av)
 {
 	t_vec3	*map;
-	char	**buffer;
-	char	*str;
-	int	fd;
 	int	i;
 	int	j;
 
-	map->nrows = ft_get_rows(av);
-	map->ncols = ft_get_cols(av);
-	map->x_i = x_vals;
-	map->y_i = y_vals;
-	map->z_i = z_vals;
+	map = (t_vec3 *) malloc(sizeof(t_vec3));
+	map->nrows = ft_get_rows(&map, av);
+	map->ncols = ft_get_cols(&map, av);
+	if (!ft_init_coord(&map))
+		return (NULL);
 	fd = open(av, O_RDONLY);
-	j = 0;
-	while (get_next_line(fd))
-	{
-		buffer = ft_split(str, ' ');
-		i = 0;
-		while (buffer[i])
-		{
-			x_vals[i] = i;
-			y_vals[i] = i;
-			z_vals[i] = ft_atoi(buffer[i]);
-			free(buffer[i]);
-			i++;
-		}
-	}
+	if (fd < 0)
+		return (NULL);
+	if (!ft_fill_matrix(fd, &matrix))
+		return (ft_free_vec);
 	close(fd);
 	free(buffer);
 	return (map);
 }
+
+int	main(void)
+{
+	char	*ptr;
+	t_vec3	matrix;
+
+	ptr = "test_maps/10-2.fdf";
+	printf("%d\n", ft_get_rows(&matrix, ptr));
+	printf("%d\n", ft_get_cols(&matrix, ptr));
+}
+
