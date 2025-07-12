@@ -6,13 +6,14 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/12 21:29:58 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/13 00:29:13 by jps              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
+static
+void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
 {
 	int	p0;
 	int	inc_x;
@@ -45,7 +46,8 @@ static void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
 	}
 }
 
-static void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
+static
+void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
 {
 	int	p0;
 	int	inc_x;
@@ -78,14 +80,36 @@ static void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
 	}
 }
 
-static void	ft_draw_edge(t_window *img, t_point p1, t_point p2)
+static
+void	ft_draw_edge(t_window *img, t_point p1, t_point p2)
 {
 	t_line	l1;
 
 	ft_init_line(&l1, p1, p2);
 	if (l1.dy > l1.dx)
 		ft_draw_line_too(img, p1, p2, l1);
-	ft_draw_line(img, p1, p2, l1);
+	else
+		ft_draw_line(img, p1, p2, l1);
+}
+
+static
+t_point	ft_transform(int x, int y, int z, int scaler)
+{
+	double	angle;
+	t_point	newPoint;
+	int		zMultiplier;
+	int		shift;
+
+	angle = 0.523599;
+	shift = 400;
+	zMultiplier = scaler / 4;
+	if (zMultiplier < 1)
+		zMultiplier = 1;
+	newPoint.x = (int)((x - y) * cos(angle) * scaler);
+	newPoint.y = (int)((x + y) * sin(angle) * scaler - z * zMultiplier);
+	newPoint.x += WIDTH / 2;
+	newPoint.y += HEIGHT / 3;
+	return (newPoint);
 }
 
 void	ft_connect(t_window *img, t_vec3 *matrix)
@@ -99,18 +123,15 @@ void	ft_connect(t_window *img, t_vec3 *matrix)
 	max = matrix->nrows * matrix->ncols;
 	while(k < max)
 	{
-		p1.x = matrix->x_i[k] * 40 + 600;
-		p1.y = matrix->y_i[k] * 40 + 200;
+		p1 = ft_transform(matrix->x_i[k], matrix->y_i[k], matrix->z_i[k],20);
 		if (k + 1 < max && ((k + 1) % matrix->ncols))
 		{
-			p2.x = matrix->x_i[k + 1] * 40 + 600;
-			p2.y = matrix->y_i[k + 1] * 40 + 200;
+			p2 = ft_transform(matrix->x_i[k + 1], matrix->y_i[k + 1], matrix->z_i[k + 1],20); 
 			ft_draw_edge(img, p1, p2);
 		}
 		if (k + matrix->ncols < max)
 		{
-			p2.x = matrix->x_i[k + matrix->ncols] * 40 + 600;
-			p2.y = matrix->y_i[k + matrix->ncols] * 40 + 200;
+			p2 = ft_transform(matrix->x_i[k + matrix->ncols], matrix->y_i[k + matrix->ncols], matrix->z_i[k + matrix->ncols], 20);
 			ft_draw_edge(img, p1, p2);
 		}
 		k++;
