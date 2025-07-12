@@ -4,6 +4,8 @@ NAME =fdf
 
 MAIN_SRC =srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/ft_parser.c srcs/ft_swap.c srcs/main.c
 
+OBJS = $(MAIN_SRC:.c=.o)
+
 LIBFT =libft/libft.a
 
 all: $(NAME)
@@ -18,11 +20,10 @@ $(LIBFT):
 	make -C libft
 
 clean:
-	rm -rf srcs/$(OBJS)
+	rm -rf $(OBJS)
 	make -C libft clean
 
 fclean: clean
-	rm $(FDF_LIB)
 	make -C libft fclean
 
 re: fclean all
