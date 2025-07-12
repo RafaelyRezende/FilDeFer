@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/10 16:53:28 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/12 16:52:45 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,13 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
+# include <errno.h>
+# include <stdio.h>
 
-# define WIDTH 1980
-# define HEIGTH 1080
+# define COLOR1 0x00FF00FF
+# define HEIGHT 1980
+# define WIDTH 1080
+# define WIN_NAME "WINWINWIN"
 
 typedef	struct s_window
 {
@@ -59,12 +63,12 @@ typedef	struct s_env_vars
 	void		*mlx;
 	void		*mlx_win;
 	t_window	windows;
-	t_vec3		mat;
+	t_vec3		*mat;
 }	t_env_vars;
 
 void	ft_put_pixel(t_window *window, int width, int heigth, int color);
 void	ft_swap(int *a, int *b);
 void	ft_init_line(t_line *line, t_point p1, t_point p2);
 t_vec3	*ft_parser(char *av);
-t_vec3	ft_constructor(int xval, int yval);
+void	ft_connect(t_window *img, t_vec3 *matrix);
 #endif
