@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/12 16:52:45 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/13 00:31:15 by jps              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stdio.h>
 
 # define COLOR1 0x00FF00FF
-# define HEIGHT 1980
+# define HEIGHT 1440
 # define WIDTH 1080
 # define WIN_NAME "WINWINWIN"
 
