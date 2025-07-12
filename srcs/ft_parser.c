@@ -6,15 +6,11 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/11 20:17:54 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/12 16:47:11 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
-
-// LEAKS ON LEAKS
-//
 
 static int	ft_free_vec(t_vec3 *matrix)
 {
@@ -72,9 +68,12 @@ static int	ft_get_cols(t_vec3 *matrix, char *av)
 	str = ft_split(gnl, ' ');
 	while (str && str[i])
 		free(str[i++]);
-	i--;
+	while (gnl)
+	{
+		free(gnl);
+		gnl = get_next_line(fd);
+	}
 	free(str);
-	free(gnl);
 	matrix->ncols = i;
 	if (close(fd) == -1 || i < 0)
 		return (0);
@@ -112,25 +111,27 @@ static int	ft_fill_matrix(int fd, t_vec3 *matrix)
 	numE = matrix->nrows * matrix->ncols;
 	str = get_next_line(fd);
 	i = 0;
-	while (str)
+	while (i < matrix->nrows)
 	{
 		j = 0;
 		buffer = ft_split(str, ' ');
 		free(str);
 		if (!buffer)
-			return (free(str), 0);
+			return (0);
 		while (buffer[j] && j < matrix->ncols)
 		{
-			matrix->x_i[i + j * matrix->ncols] = i;
-			matrix->y_i[i + j * matrix->ncols] = j;
-			matrix->z_i[i + j * matrix->ncols] = ft_atoi(buffer[j]); 
+			matrix->x_i[j + i * matrix->ncols] = j;
+			matrix->y_i[j + i * matrix->ncols] = i;
+			matrix->z_i[j + i * matrix->ncols] = ft_atoi(buffer[j]); 
 			free(buffer[j]);
 			j++;
 		}
+		while (buffer[j])
+			free(buffer[j++]);
 		str = get_next_line(fd);
 		i++;
+		free(buffer);
 	}
-	free(buffer);
 	free(str);
 	return (i);
 }
@@ -153,7 +154,7 @@ t_vec3	*ft_parser(char *av)
 	close(fd);
 	return (map);
 }
-
+/*
 int	main(void)
 {
 	char	*ptr;
@@ -162,15 +163,17 @@ int	main(void)
 	int	numE;
 
 	i = 0;
-	ptr = "test_maps/10-2.fdf";
+	ptr = "test_maps/test.fdf";
 	matrix = ft_parser(ptr);
 	numE = matrix->nrows * matrix->ncols;
 	while (i < numE)
 	{
-		printf("x: %d\n", matrix->x_i[i]);
-		printf("y: %d\n", matrix->y_i[i]);
-		printf("z: %d\n", matrix->z_i[i]);
+		printf("x: %d, ", matrix->x_i[i]);
+		printf("y: %d, ", matrix->y_i[i]);
+		printf("z: %d", matrix->z_i[i]);
+		printf("\n");
 		i++;
 	}
 	return (ft_free_vec(matrix));
 }
+*/
