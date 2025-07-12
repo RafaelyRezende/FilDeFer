@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/12 19:26:32 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/12 21:29:58 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,17 @@ void	ft_connect(t_window *img, t_vec3 *matrix)
 	max = matrix->nrows * matrix->ncols;
 	while(k < max)
 	{
-		p1.x = matrix->x_i[k] * 40 + 200;
+		p1.x = matrix->x_i[k] * 40 + 600;
 		p1.y = matrix->y_i[k] * 40 + 200;
 		if (k + 1 < max && ((k + 1) % matrix->ncols))
 		{
-			p2.x = matrix->x_i[k + 1] * 40 + 200;
+			p2.x = matrix->x_i[k + 1] * 40 + 600;
 			p2.y = matrix->y_i[k + 1] * 40 + 200;
 			ft_draw_edge(img, p1, p2);
 		}
 		if (k + matrix->ncols < max)
 		{
-			p2.x = matrix->x_i[k + matrix->ncols] * 40 + 200;
+			p2.x = matrix->x_i[k + matrix->ncols] * 40 + 600;
 			p2.y = matrix->y_i[k + matrix->ncols] * 40 + 200;
 			ft_draw_edge(img, p1, p2);
 		}
