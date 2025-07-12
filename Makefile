@@ -2,7 +2,7 @@ CC = cc
 
 NAME =fdf
 
-MAIN_SRC =srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/ft_parser.c srcs/ft_swap.c
+MAIN_SRC =srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/ft_parser.c srcs/ft_swap.c srcs/main.c
 
 LIBFT =libft/libft.a
 
