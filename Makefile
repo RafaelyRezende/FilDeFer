@@ -11,7 +11,7 @@ LIBFT =libft/libft.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(MAIN_SRC)
-	$(CC) $(MAIN_SRC) $(LIBFT) -g -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(MAIN_SRC) $(LIBFT) -std=c11 -g -O3 -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -o $(NAME)
 
 srcs/%.o: srcs/%.c
 	$(CC) -g $(CFLAGS) -o $@ -c $<
