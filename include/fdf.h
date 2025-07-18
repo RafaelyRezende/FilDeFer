@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/17 17:52:09 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:34:58 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,13 @@ typedef	struct s_window
 	int	endian;
 }	t_window;
 
-typedef	struct	s_vec3
+typedef struct	s_vec4
 {
-	int	nrows;
-	int	ncols;
-	int	*x_i;
-	int	*y_i;
-	int	*z_i;
-}	t_vec3;
+	float	x;
+	float	y;
+	float	z;
+	float	w;
+}	t_vec4; 
 
 typedef	struct	s_line
 {
@@ -60,37 +59,22 @@ typedef	struct	s_line
 	int	param;
 }	t_line;
 
-typedef	struct	s_point
-{
-	float	x;
-	float	y;
-	float	z;
-}	t_point;
-
-typedef	struct s_env_vars
+typedef	struct s_env
 {
 	void		*mlx;
 	void		*mlx_win;
 	t_window	windows;
-	t_vec3		*mat;
-}	t_env_vars;
+	t_map		*map;
+}	t_env;
 
 typedef struct __attribute__((aligned(16)))	s_mat4
 {
 	float	matrix[MAT4_DIM];
 }	t_mat4;
 
-typedef struct	s_quat
-{
-	float	x;
-	float	y;
-	float	z;
-	float	w;
-}	t_quat; 
-
 typedef struct	s_map
 { 
-	t_point	*points;
+	t_vec4	*points;
 	int		num_points;
 }	t_map;
 
@@ -100,7 +84,7 @@ typedef struct s_trig_lookup
 	float	cos_table[TABLE_SIZE];
 }	t_trig_lookup;
 
-typedef struct	s_quaternion_const
+typedef struct	s_quat_const
 {
 	float	half_x;
 	float   half_y;
@@ -111,9 +95,9 @@ typedef struct	s_quaternion_const
 	float   sy;
 	float   cz;
 	float   sz;
-}	t_quaternion_const;
+}	t_quat_const;
 
-typedef	struct	s_transform_vals
+typedef	struct	s_trans_vals
 {
 	float	sx;
 	float	sy;
@@ -124,7 +108,7 @@ typedef	struct	s_transform_vals
 	float	rx;
 	float	ry;
 	float	rz;
-}	t_transform_vals;
+}	t_trans_vals;
 
 void	ft_put_pixel(t_window *window, int width, int heigth, int color);
 void	ft_swap(int *a, int *b);

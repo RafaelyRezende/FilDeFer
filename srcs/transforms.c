@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:27:21 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/17 18:26:16 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:11:31 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ float	fast_sin_cos(t_trig_lookup *cache, float rad, int flag)
 }
 
 static
-t_quat	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cache)
+t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cache)
 {
-	t_quat				q;
-	t_quaternion_const	k;
+	t_vec4				q;
+	t_vec4_const	k;
 
 	k.half_x = x_rad * 0.5f;
 	k.half_y = y_rad * 0.5f;
@@ -79,7 +79,7 @@ t_quat	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
     return (q);
 }
 
-void	mat4_from_quat(t_mat4 *m, t_quat q)
+void	mat4_from_quat(t_mat4 *m, t_vec4 q)
 {
 	float xx = q.x * q.x;
 	float yy = q.y * q.y;
@@ -161,9 +161,9 @@ void	ft_matmul(t_mat4 *out, t_mat4 *a, t_mat4 *b)
 }
 
 static
-void	ft_pipeline(t_mat4 *out, t_transform_vals obj, t_trig_lookup *cache)
+void	ft_pipeline(t_mat4 *out, t_trans_vals obj, t_trig_lookup *cache)
 {
-	t_quat	q;
+	t_vec4	q;
 	t_mat4	scale;
 	t_mat4	translate;
 	t_mat4	rotate;
@@ -177,7 +177,7 @@ void	ft_pipeline(t_mat4 *out, t_transform_vals obj, t_trig_lookup *cache)
 	ft_matmul(out, &translate, &tmp);
 }
 
-void apply_transform(t_point *p, t_mat4 *m)
+void apply_transform(t_vec4 *p, t_mat4 *m)
 {
 	float	x;
 	float	y;
@@ -191,6 +191,7 @@ void apply_transform(t_point *p, t_mat4 *m)
 	p->z = x * m->matrix[8] + y * m->matrix[9] + z * m->matrix[10] + m->matrix[11];
 }
 
+/*
 int main(void)
 {
     t_trig_lookup cache;
@@ -198,7 +199,7 @@ int main(void)
     printf("✔ Trig cache initialized.\n");
 
     float x_rad = M_PI / 4, y_rad = M_PI / 4, z_rad = M_PI / 4;
-    t_quat q = quat_from_euler(x_rad, y_rad, z_rad, &cache);
+    t_vec4 q = quat_from_euler(x_rad, y_rad, z_rad, &cache);
     printf("✔ Quaternion: w=%.3f x=%.3f y=%.3f z=%.3f\n", q.w, q.x, q.y, q.z);
 
     t_mat4 rot;
@@ -231,3 +232,4 @@ int main(void)
 
     return 0;
 }
+*/

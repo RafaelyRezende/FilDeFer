@@ -6,12 +6,30 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 13:05:58 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/13 00:16:30 by jps              ###   ########.fr       */
+/*   Updated: 2025/07/18 12:04:38 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+int	main(int argc, char** argv)
+{
+	t_window		params_window;
+	t_env			params_env;
+	t_mat4			trans_matrix;
+	t_trig_lookup	trig_table;
+	t_quat_const	q_const;
+	t_trans_vals	trans_vals;
+
+	if (argc != 2)
+	{
+		ft_printf("Wrong number os arguments.");
+		return (-1);
+	}
+}
+
+
+/*
 int	main(int argc, char **argv)
 {
 	t_window	img;
@@ -44,3 +62,4 @@ int	main(int argc, char **argv)
 	mlx_put_image_to_window(this.mlx, this.mlx_win, img.img, 0, 0);
 	mlx_loop(this.mlx);
 }
+*/
