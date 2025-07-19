@@ -1,17 +1,105 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_parser.c                                        :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/12 20:37:42 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/19 15:46:05 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+int	ft_free_line(int fd, char *line)
+{
+	free(line);
+	close(fd);
+	return (-1);
+}
+
+int	ft_free_split(char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return (-1);
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+	return (-1);
+}
+
+int	ft_count_col(char *line, int *col)
+{
+	char	**split;
+	int		count;
+
+	count = 0;
+	split = ft_split(line, ' ');
+	if (!split)
+		return (-1);
+	while (split[count])
+		count++;
+	if (*col < 0)
+		*col = count;
+	else if (count != *col)
+		return (ft_free_split(split));
+	return (!(ft_free_split(split)));
+}
+
+int	ft_get_dim(const char *filename, int *row, int *col)
+{
+	int		fd;
+	int		status;
+	char	*line;
+
+	*row = 0;
+	*col = -1;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	line = get_next_line(fd);
+	while (line)
+	{
+		status = ft_count_col(line, col);
+		free(line);
+		if (status < 0)
+		{
+			close(fd);
+			return (-1);
+		}
+		(*row)++;
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (0);
+}
+
+int	init_map(const char *filename, t_map *map, t_mat4 *quat)
+{
+	int				fd;
+	char			*line;
+	char			**split;
+	t_map_dimension	map_dim;
+	t_trig_lookup	cache;
+
+	if (ft_get_dim(filename, &map_dim.mapRow, &map_dim.mapCol) < 0)
+		return (-1);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	map->num_points = map_dim.mapRow * map_dim.mapCol;
+	map->points = malloc(sizeof(t_vec4) * map->num_points);
+	init_tables(&cache);
+	fd = open(filename, O_RDONLY);
+	if (!fd)
+		return (-1);
+}
+
+/*
 static int	ft_free_vec(t_vec3 *matrix)
 {
 	if (matrix)
@@ -154,7 +242,7 @@ t_vec3	*ft_parser(char *av)
 	close(fd);
 	return (map);
 }
-/*
+
 int	main(void)
 {
 	char	*ptr;
