@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/19 15:46:05 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/19 17:10:59 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_free_split(char **arr)
 	return (-1);
 }
 
-int	ft_count_col(char *line, int *col)
+int	ft_count_col(char *line, int *row, int *col, t_mat4 *quat)
 {
 	char	**split;
 	int		count;
@@ -47,7 +47,11 @@ int	ft_count_col(char *line, int *col)
 		*col = count;
 	else if (count != *col)
 		return (ft_free_split(split));
-	return (!(ft_free_split(split)));
+	count = 0;
+	while (count < *col)
+		quat->point[*row * *col + count].z = ft_atoi(count++);
+	(void)ft_free_split(split);
+	return (0);
 }
 
 int	ft_get_dim(const char *filename, int *row, int *col)
@@ -81,6 +85,8 @@ int	ft_get_dim(const char *filename, int *row, int *col)
 int	init_map(const char *filename, t_map *map, t_mat4 *quat)
 {
 	int				fd;
+	int				i;
+	int				j;
 	char			*line;
 	char			**split;
 	t_map_dimension	map_dim;
@@ -88,15 +94,26 @@ int	init_map(const char *filename, t_map *map, t_mat4 *quat)
 
 	if (ft_get_dim(filename, &map_dim.mapRow, &map_dim.mapCol) < 0)
 		return (-1);
+	map->num_points = map_dim.mapRow * map_dim.mapCol;
+	map->points = malloc(sizeof(t_vec4) * map->num_points);
+	if (!map->points)
+		return (-1);
+	init_tables(&cache);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		return (-1);
-	map->num_points = map_dim.mapRow * map_dim.mapCol;
-	map->points = malloc(sizeof(t_vec4) * map->num_points);
-	init_tables(&cache);
-	fd = open(filename, O_RDONLY);
-	if (!fd)
-		return (-1);
+	i = 0;
+	while (i < map->num_points)
+	{
+		j = 0;
+		while (split[i])
+		{
+			map->points[i].x = 
+			map->points[i].y = 
+			map->points[i].z
+			map->points[i].w
+		}
+	}
 }
 
 /*
