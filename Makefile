@@ -17,7 +17,7 @@ all: $(NAME)
 test: $(PARSER_TEST)
 
 $(PARSER_TEST): $(LIBFT) $(TEST_SRCS)
-	$(CC) $(TEST_SRCS) $(LIBFT) -std=c11 -g -O3 -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -o $(PARSER_TEST)
+	$(CC) $(TEST_SRCS) $(LIBFT) -g -pg -O3 -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -o $(PARSER_TEST)
 
 $(NAME): $(LIBFT) $(MAIN_SRC)
 	$(CC) $(MAIN_SRC) $(LIBFT) -std=c11 -g -O3 -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -o $(NAME)

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:27:21 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/18 12:11:31 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:14:01 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ float	fast_sin_cos(t_trig_lookup *cache, float rad, int flag)
 static
 t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cache)
 {
-	t_vec4				q;
-	t_vec4_const	k;
+	t_vec4		q;
+	t_quat_const	k;
 
 	k.half_x = x_rad * 0.5f;
 	k.half_y = y_rad * 0.5f;
@@ -71,25 +71,35 @@ t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
 	k.cz = fast_sin_cos(cache, k.half_z, 1);
 	k.sz = fast_sin_cos(cache, k.half_z, 0);
 
-    q.w = k.cx * k.cy * k.cz + k.sx * k.sy * k.sz;
-    q.x = k.sx * k.cy * k.cz - k.cx * k.sy * k.sz;
-    q.y = k.cx * k.sy * k.cz + k.sx * k.cy * k.sz;
-    q.z = k.cx * k.cy * k.sz - k.sx * k.sy * k.cz;
+	q.w = k.cx * k.cy * k.cz + k.sx * k.sy * k.sz;
+	q.x = k.sx * k.cy * k.cz - k.cx * k.sy * k.sz;
+	q.y = k.cx * k.sy * k.cz + k.sx * k.cy * k.sz;
+	q.z = k.cx * k.cy * k.sz - k.sx * k.sy * k.cz;
 
-    return (q);
+	return (q);
 }
 
 void	mat4_from_quat(t_mat4 *m, t_vec4 q)
 {
-	float xx = q.x * q.x;
-	float yy = q.y * q.y;
-	float zz = q.z * q.z;
-	float xy = q.x * q.y;
-	float xz = q.x * q.z;
-	float yz = q.y * q.z;
-	float wx = q.w * q.x;
-	float wy = q.w * q.y;
-	float wz = q.w * q.z;
+	float	xx;
+	float	yy;
+	float	zz;
+	float	xy;
+	float	xz;
+	float	yz;
+	float	wx;
+	float	wy;
+	float	wz;
+
+	xx = q.x * q.x;
+	yy = q.y * q.y;
+	zz = q.z * q.z;
+	xy = q.x * q.y;
+	xz = q.x * q.z;
+	yz = q.y * q.z;
+	wx = q.w * q.x;
+	wy = q.w * q.y;
+	wz = q.w * q.z;
 
 	m->matrix[0]  = 1.0f - 2.0f * (yy + zz);
 	m->matrix[1]  = 2.0f * (xy - wz);
@@ -138,9 +148,9 @@ void	ft_translate_matrix(t_mat4 *m, float tx, float ty, float tz)
 static
 void	ft_matmul(t_mat4 *out, t_mat4 *a, t_mat4 *b)
 {
-	int		iter_row;
-	int		iter_col;
-	int		iter_k;
+	int	iter_row;
+	int	iter_col;
+	int	iter_k;
 
 	iter_row = 0;
 	while (iter_row < DIM)
@@ -222,7 +232,7 @@ int main(void)
     ft_matmul(&final, &trans, &temp);
     printf("\n✔ Final transformation matrix:\n");
     for (int i = 0; i < MAT4_DIM; ++i) {
-        if (i % 4 == 0) printf("\n");
+    if (i % 4 == 0) printf("\n");
         printf("%6.2f ", final.matrix[i]);
     }
 

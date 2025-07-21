@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/19 11:09:57 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:19:23 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,12 @@ typedef	struct	s_line
 	int	param;
 }	t_line;
 
-typedef struct	s_map_dimension
-{
-	int	mapRow;
-	int	mapCol;
-}	t_map_dimension;
-
 typedef struct	s_map
 { 
 	t_vec4	*points;
-	int		num_points;
+	int	num_points;
+	int	mapRow;
+	int	mapCol;
 }	t_map;
 
 typedef struct __attribute__((aligned(16)))	s_mat4
@@ -114,7 +110,6 @@ typedef	struct s_env
 	void			*mlx_win;
 	t_window		windows;
 	t_map			*map;
-	t_map_dimension	mapDim;
 }	t_env;
 
 void	ft_put_pixel(t_window *window, int width, int heigth, int color);

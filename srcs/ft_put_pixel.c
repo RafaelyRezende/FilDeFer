@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:02:01 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/12 17:01:11 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/21 14:20:53 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_put_pixel(t_window *window, int width, int heigth, int color)
 	int val;
 
 	val = heigth * window->line_length + width * (window->bits_per_pixel / 8);
-	if (val < 0 || width > WIDTH || heigth > HEIGHT)
+	if (val < 0 || width > MAX_WIDTH || heigth > MAX_HEIGHT)
 		return ;
 	dst = window->addr + val;
 	*(unsigned int*)dst = color;

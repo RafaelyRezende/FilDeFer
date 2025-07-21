@@ -6,12 +6,13 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/19 17:10:59 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:14:08 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+static
 int	ft_free_line(int fd, char *line)
 {
 	free(line);
@@ -19,6 +20,7 @@ int	ft_free_line(int fd, char *line)
 	return (-1);
 }
 
+static
 int	ft_free_split(char **arr)
 {
 	int	i;
@@ -32,10 +34,11 @@ int	ft_free_split(char **arr)
 	return (-1);
 }
 
-int	ft_count_col(char *line, int *row, int *col, t_mat4 *quat)
+static
+int	ft_count_col(char *line, int *col)
 {
 	char	**split;
-	int		count;
+	int	count;
 
 	count = 0;
 	split = ft_split(line, ' ');
@@ -47,21 +50,17 @@ int	ft_count_col(char *line, int *row, int *col, t_mat4 *quat)
 		*col = count;
 	else if (count != *col)
 		return (ft_free_split(split));
-	count = 0;
-	while (count < *col)
-		quat->point[*row * *col + count].z = ft_atoi(count++);
 	(void)ft_free_split(split);
 	return (0);
 }
 
+static
 int	ft_get_dim(const char *filename, int *row, int *col)
 {
-	int		fd;
-	int		status;
+	int	fd;
+	int	status;
 	char	*line;
 
-	*row = 0;
-	*col = -1;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		return (-1);
@@ -82,38 +81,53 @@ int	ft_get_dim(const char *filename, int *row, int *col)
 	return (0);
 }
 
-int	init_map(const char *filename, t_map *map, t_mat4 *quat)
+static
+int	ft_free_map(t_map *map)
 {
-	int				fd;
-	int				i;
-	int				j;
-	char			*line;
-	char			**split;
-	t_map_dimension	map_dim;
-	t_trig_lookup	cache;
+	free(map->points);
+	return (-1);
+}
 
-	if (ft_get_dim(filename, &map_dim.mapRow, &map_dim.mapCol) < 0)
+int	init_map(const char *filename, t_map *map)//, t_mat4 *quat
+{
+	int	fd;
+	int	i;
+	int	j;
+	char	*line;
+	char	**split;
+
+	if ((ft_get_dim(filename, &map->mapRow, &map->mapCol)) < 0)
 		return (-1);
-	map->num_points = map_dim.mapRow * map_dim.mapCol;
+	map->num_points = map->mapRow * map->mapCol;
+	fd = open(filename, O_RDONLY);
+	if (!fd)
+		return (-1);
 	map->points = malloc(sizeof(t_vec4) * map->num_points);
 	if (!map->points)
-		return (-1);
-	init_tables(&cache);
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
 		return (-1);
 	i = 0;
 	while (i < map->num_points)
 	{
+		line = get_next_line(fd);
+		if (!line)
+			return(free(line),-1);
+		split = ft_split(line, ' ');
+		if (!split)
+			return (ft_free_map(map));
 		j = 0;
-		while (split[i])
+		free(line);
+		while (split[j])
 		{
-			map->points[i].x = 
-			map->points[i].y = 
-			map->points[i].z
-			map->points[i].w
+			map->points[i].x = (float) j;
+			map->points[i].y = (float) (i / map->mapCol);
+			map->points[i].z = (float) (ft_atoi(split[j]));
+			map->points[i].w = 0.0f;
+			j++;
+			i++;
 		}
+		(void)ft_free_split(split);
 	}
+	return (0);
 }
 
 /*

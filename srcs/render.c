@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/18 12:33:04 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/21 14:23:33 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_draw_line(t_window *img, t_vec4 p1, t_vec4 p2, t_line l1)
 }
 
 static
-void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
+void	ft_draw_line_too(t_window *img, t_vec4 p1, t_vec4 p2, t_line l1)
 {
 	int	p0;
 	int	inc_x;
@@ -81,7 +81,7 @@ void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
 }
 
 static
-void	ft_draw_edge(t_window *img, t_point p1, t_point p2)
+void	ft_draw_edge(t_window *img, t_vec4 p1, t_vec4 p2)
 {
 	t_line	l1;
 
@@ -90,9 +90,4 @@ void	ft_draw_edge(t_window *img, t_point p1, t_point p2)
 		ft_draw_line_too(img, p1, p2, l1);
 	else
 		ft_draw_line(img, p1, p2, l1);
-}
-
-void	ft_connect_row(t_window *img, t_vec3 *matrix)
-{
-
 }
