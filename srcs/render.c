@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/21 14:23:33 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:28:59 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,35 @@ void	ft_draw_edge(t_window *img, t_vec4 p1, t_vec4 p2)
 		ft_draw_line_too(img, p1, p2, l1);
 	else
 		ft_draw_line(img, p1, p2, l1);
+}
+
+void	ft_connect(t_window *img, t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < map->mapRow)
+	{
+		j = 0;
+		while (j + 1 < map->mapCol)
+		{
+			ft_draw_edge(img, map->points[i * map->mapRow + j], 
+					map->points[i * map->mapRow + (j + 1)]);
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	while (i + 1 < map->mapRow)
+	{
+		j = 0;
+		while (j < map->mapCol)
+		{
+			ft_draw_edge(img, map->points[i * map->mapCol + j],
+					map->points[i * map->mapCol + (j + 1)]);
+			j++;
+		}
+		i++;
+	}
 }

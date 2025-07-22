@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/21 12:19:23 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:20:53 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,19 @@ typedef struct	s_quat_const
 	float   sz;
 }	t_quat_const;
 
+typedef struct	s_matrix_const
+{
+	float	xx;
+	float	yy;
+	float	zz;
+	float	xy;
+	float	xz;
+	float	yz;
+	float	wx;
+	float	wy;
+	float	wz;
+}	t_matrix_const;
+
 typedef	struct	s_trans_vals
 {
 	float	sx;
@@ -112,9 +125,10 @@ typedef	struct s_env
 	t_map			*map;
 }	t_env;
 
-void	ft_put_pixel(t_window *window, int width, int heigth, int color);
-void	ft_swap(int *a, int *b);
-void	ft_init_line(t_line *line, t_vec4 p1, t_vec4 p2);
-t_vec4	*ft_parser(char *av);
-void	ft_connect(t_window *img, t_vec4 *matrix);
+void	ft_put_pixel(t_window *, float, float, float);
+void	ft_swap(float*, float*);
+void	ft_init_line(t_line *, t_vec4, t_vec4);
+t_vec4	*ft_parser(char *);
+void	ft_connect(t_window *, t_map *);
+int	init_map(const char*, t_map*);
 #endif

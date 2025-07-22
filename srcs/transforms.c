@@ -6,11 +6,17 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:27:21 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/21 17:14:01 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 15:35:58 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+typedef enum	s_trig
+{
+	SIN = 0,
+	COS = 1,
+}	t_trig;
 
 static
 void	ft_identity(t_mat4 *id)
@@ -22,7 +28,6 @@ void	ft_identity(t_mat4 *id)
 		id->matrix[5 * i++] = MAT4_IDENTITY_VAL;
 }
 
-static
 void	init_tables(t_trig_lookup *cache)
 {
 	int		i;
@@ -64,12 +69,12 @@ t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
 	k.half_x = x_rad * 0.5f;
 	k.half_y = y_rad * 0.5f;
 	k.half_z = z_rad * 0.5f;
-	k.cx = fast_sin_cos(cache, k.half_x, 1);
-	k.sx = fast_sin_cos(cache, k.half_x, 0);
-	k.cy = fast_sin_cos(cache, k.half_y, 1);
-	k.sy = fast_sin_cos(cache, k.half_y, 0);
-	k.cz = fast_sin_cos(cache, k.half_z, 1);
-	k.sz = fast_sin_cos(cache, k.half_z, 0);
+	k.cx = fast_sin_cos(cache, k.half_x, COS);
+	k.sx = fast_sin_cos(cache, k.half_x, SIN);
+	k.cy = fast_sin_cos(cache, k.half_y, COS);
+	k.sy = fast_sin_cos(cache, k.half_y, SIN);
+	k.cz = fast_sin_cos(cache, k.half_z, COS);
+	k.sz = fast_sin_cos(cache, k.half_z, SIN);
 
 	q.w = k.cx * k.cy * k.cz + k.sx * k.sy * k.sz;
 	q.x = k.sx * k.cy * k.cz - k.cx * k.sy * k.sz;
@@ -79,41 +84,37 @@ t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
 	return (q);
 }
 
-void	mat4_from_quat(t_mat4 *m, t_vec4 q)
+t_matrix_const	init_cons_mat(t_vec4 q)
 {
-	float	xx;
-	float	yy;
-	float	zz;
-	float	xy;
-	float	xz;
-	float	yz;
-	float	wx;
-	float	wy;
-	float	wz;
+	t_matrix_const	cons;
 
-	xx = q.x * q.x;
-	yy = q.y * q.y;
-	zz = q.z * q.z;
-	xy = q.x * q.y;
-	xz = q.x * q.z;
-	yz = q.y * q.z;
-	wx = q.w * q.x;
-	wy = q.w * q.y;
-	wz = q.w * q.z;
+	cons.xx = q.x * q.x;
+	cons.yy = q.y * q.y;
+	cons.zz = q.z * q.z;
+	cons.xy = q.x * q.y;
+	cons.xz = q.x * q.z;
+	cons.yz = q.y * q.z;
+	cons.wx = q.w * q.x;
+	cons.wy = q.w * q.y;
+	cons.wz = q.w * q.z;
+	return (cons);
+}
 
-	m->matrix[0]  = 1.0f - 2.0f * (yy + zz);
-	m->matrix[1]  = 2.0f * (xy - wz);
-	m->matrix[2]  = 2.0f * (xz + wy);
+void	mat4_from_quat(t_mat4 *m, t_matrix_const cons)
+{
+	m->matrix[0]  = 1.0f - 2.0f * (cons.yy + cons.zz);
+	m->matrix[1]  = 2.0f * (cons.xy - cons.wz);
+	m->matrix[2]  = 2.0f * (cons.xz + cons.wy);
 	m->matrix[3]  = 0.0f;
 
-	m->matrix[4]  = 2.0f * (xy + wz);
-	m->matrix[5]  = 1.0f - 2.0f * (xx + zz);
-	m->matrix[6]  = 2.0f * (yz - wx);
+	m->matrix[4]  = 2.0f * (cons.xy + cons.wz);
+	m->matrix[5]  = 1.0f - 2.0f * (cons.xx + cons.zz);
+	m->matrix[6]  = 2.0f * (cons.yz - cons.wx);
 	m->matrix[7]  = 0.0f;
 
-	m->matrix[8]  = 2.0f * (xz - wy);
-	m->matrix[9]  = 2.0f * (yz + wx);
-	m->matrix[10] = 1.0f - 2.0f * (xx + yy);
+	m->matrix[8]  = 2.0f * (cons.xz - cons.wy);
+	m->matrix[9]  = 2.0f * (cons.yz + cons.wx);
+	m->matrix[10] = 1.0f - 2.0f * (cons.xx + cons.yy);
 	m->matrix[11] = 0.0f;
 
 	m->matrix[12] = 0.0f;
@@ -170,18 +171,19 @@ void	ft_matmul(t_mat4 *out, t_mat4 *a, t_mat4 *b)
 	}
 }
 
-static
 void	ft_pipeline(t_mat4 *out, t_trans_vals obj, t_trig_lookup *cache)
 {
-	t_vec4	q;
-	t_mat4	scale;
-	t_mat4	translate;
-	t_mat4	rotate;
-	t_mat4	tmp;
+	t_vec4		q;
+	t_mat4		scale;
+	t_mat4		translate;
+	t_mat4		rotate;
+	t_mat4		tmp;
+	t_matrix_const	cons;
 
 	q = quat_from_euler(obj.rx, obj.ry, obj.rz, cache);
 	ft_scale_matrix(&scale, obj.sx, obj.sy, obj.sz);
-	mat4_from_quat(&rotate, q);
+	cons = init_cons_mat(q); 
+	mat4_from_quat(&rotate, cons);
 	ft_translate_matrix(&translate, obj.tx, obj.ty, obj.tz);
 	ft_matmul(&tmp, &rotate, &scale);
 	ft_matmul(out, &translate, &tmp);
@@ -202,6 +204,11 @@ void apply_transform(t_vec4 *p, t_mat4 *m)
 }
 
 /*
+int	isometric_projection(t_vec4 *p)
+{
+	
+}
+
 int main(void)
 {
     t_trig_lookup cache;

@@ -6,15 +6,17 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 23:32:31 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/05 23:38:56 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:26:08 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "fdf.h"
 
-void	ft_swap(int *a, int *b)
+void	ft_swap(float* a, float* b)
 {
-	*a ^= *b;
-	*b ^= *a;
-	*a ^= *b;
+	float	tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
 }

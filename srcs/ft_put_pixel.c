@@ -6,18 +6,19 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:02:01 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/21 14:20:53 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:23:00 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	ft_put_pixel(t_window *window, int width, int heigth, int color)
+void	ft_put_pixel(t_window *window, float width, float heigth, float color)
 {
 	char	*dst;
 	int val;
 
-	val = heigth * window->line_length + width * (window->bits_per_pixel / 8);
+	val = (int)heigth * window->line_length + \
+		(int)width * (window->bits_per_pixel / 8);
 	if (val < 0 || width > MAX_WIDTH || heigth > MAX_HEIGHT)
 		return ;
 	dst = window->addr + val;

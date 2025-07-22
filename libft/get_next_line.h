@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 13:56:13 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/02 15:02:56 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/22 15:11:46 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10000
 # endif
 
 # include <fcntl.h>
