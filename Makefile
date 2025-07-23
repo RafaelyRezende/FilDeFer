@@ -2,7 +2,7 @@ CC = cc
 
 NAME =fdf
 
-MAIN_SRC =srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/ft_swap.c srcs/main.c srcs/transforms.c
+MAIN_SRC = srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/ft_swap.c srcs/main.c srcs/transforms.c
 
 OBJS = $(MAIN_SRC:.c=.o)
 

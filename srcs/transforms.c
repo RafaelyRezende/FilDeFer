@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:27:21 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/22 15:35:58 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:56:25 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,19 @@ float	fast_sin_cos(t_trig_lookup *cache, float rad, int flag)
 }
 
 static
+void	ft_norm(t_vec4 *q)
+{
+	float	res;
+
+	res = sqrt(q->x * q->x + q->y * q->y +\
+			q->z * q->z +q->w * q->w);
+	q->x /= res;
+	q->y /= res;
+	q->z /= res;
+	q->w /= res;
+}
+
+static
 t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cache)
 {
 	t_vec4		q;
@@ -80,10 +93,12 @@ t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
 	q.x = k.sx * k.cy * k.cz - k.cx * k.sy * k.sz;
 	q.y = k.cx * k.sy * k.cz + k.sx * k.cy * k.sz;
 	q.z = k.cx * k.cy * k.sz - k.sx * k.sy * k.cz;
+	ft_norm(&q);
 
 	return (q);
 }
 
+static
 t_matrix_const	init_cons_mat(t_vec4 q)
 {
 	t_matrix_const	cons;
@@ -100,6 +115,7 @@ t_matrix_const	init_cons_mat(t_vec4 q)
 	return (cons);
 }
 
+static
 void	mat4_from_quat(t_mat4 *m, t_matrix_const cons)
 {
 	m->matrix[0]  = 1.0f - 2.0f * (cons.yy + cons.zz);
@@ -141,9 +157,9 @@ void	ft_translate_matrix(t_mat4 *m, float tx, float ty, float tz)
 	m->matrix[5] = 1.0f;
 	m->matrix[10] = 1.0f;
 	m->matrix[15] = 1.0f;
-	m->matrix[12] = tx;
-	m->matrix[13] = ty;
-	m->matrix[14] = tz;
+	m->matrix[3] = tx;
+	m->matrix[7] = ty;
+	m->matrix[11] = tz;
 }
 
 static
@@ -162,7 +178,9 @@ void	ft_matmul(t_mat4 *out, t_mat4 *a, t_mat4 *b)
 			iter_k = 0;
 			while (iter_k < DIM)
 			{
-				out->matrix[iter_row * DIM + iter_col] += a->matrix[iter_row * DIM + iter_k] * b->matrix[iter_k * DIM + iter_col];
+				out->matrix[iter_row * DIM + iter_col] += \
+				a->matrix[iter_row * DIM + iter_k] * \
+				b->matrix[iter_k * DIM + iter_col];
 				iter_k++;
 			}
 			iter_col++;
@@ -180,6 +198,7 @@ void	ft_pipeline(t_mat4 *out, t_trans_vals obj, t_trig_lookup *cache)
 	t_mat4		tmp;
 	t_matrix_const	cons;
 
+	ft_memset(&tmp, 0, sizeof(t_mat4));
 	q = quat_from_euler(obj.rx, obj.ry, obj.rz, cache);
 	ft_scale_matrix(&scale, obj.sx, obj.sy, obj.sz);
 	cons = init_cons_mat(q); 
@@ -204,11 +223,6 @@ void apply_transform(t_vec4 *p, t_mat4 *m)
 }
 
 /*
-int	isometric_projection(t_vec4 *p)
-{
-	
-}
-
 int main(void)
 {
     t_trig_lookup cache;

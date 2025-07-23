@@ -6,17 +6,16 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/22 12:41:15 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:10:26 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 static
-int	ft_free_line(int fd, char *line)
+int	ft_free_line(char *line)
 {
 	free(line);
-	close(fd);
 	return (-1);
 }
 
@@ -82,50 +81,73 @@ int	ft_get_dim(const char *filename, int *row, int *col)
 }
 
 static
-int	ft_free_map(t_map *map)
+int	ft_free_map(int fd, t_map **map)
 {
-	free(map->points);
+	free((*map)->points);
+	free(*map);
+	close(fd);
 	return (-1);
 }
 
-int	init_map(const char *filename, t_map *map)//, t_mat4 *quat
+static
+int	ft_mapalloc(const char *filename, t_map **map)
 {
-	int	fd;
+	*map = (t_map *)malloc(sizeof(t_map));
+	if (!*map)
+		return (-1);
+	(*map)->mapRow = 0;
+	(*map)->mapCol = -1;
+	if ((ft_get_dim(filename, &((*map)->mapRow), &((*map)->mapCol)) < 0))
+		return (free(*map), -1);
+	(*map)->num_points = (*map)->mapRow * (*map)->mapCol;
+	(*map)->points = malloc(sizeof(t_vec4) * (*map)->num_points);
+	if (!(*map)->points)
+		return (free(*map), -1);
+	return (0);
+}
+
+static
+int	ft_parse_points(int fd, char *line, char **split, t_map **map)
+{
 	int	i;
 	int	j;
-	char	*line;
-	char	**split;
 
-	if ((ft_get_dim(filename, &map->mapRow, &map->mapCol)) < 0)
-		return (-1);
-	map->num_points = map->mapRow * map->mapCol;
-	fd = open(filename, O_RDONLY);
-	if (!fd)
-		return (-1);
-	map->points = malloc(sizeof(t_vec4) * map->num_points);
-	if (!map->points)
-		return (-1);
 	i = 0;
-	while (i < map->num_points)
+	while (i < (*map)->num_points)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			return(free(line),-1);
+			return(ft_free_line(line));
 		split = ft_split(line, ' ');
 		if (!split)
-			return (ft_free_map(map));
-		j = 0;
+			return (ft_free_line(line));
+		j = -1;
 		free(line);
-		while (split[j])
+		while (split[++j])
 		{
-			map->points[i].x = (float) j;
-			map->points[i].y = (float) (i / map->mapCol);
-			map->points[i].z = (float) (ft_atoi(split[j]));
-			map->points[i].w = 0.0f;
-			j++;
+			(*map)->points[i].x = (float) j;
+			(*map)->points[i].z = (float) (ft_atoi(split[j]));
+			(*map)->points[i].y = (float) (i / (*map)->mapCol);
+			(*map)->points[i].w = 0.0f;
 			i++;
 		}
 		(void)ft_free_split(split);
 	}
+	return (0);
+}
+
+int	init_map(const char *filename, t_map **map)//, t_mat4 *quat
+{
+	int	fd;
+	char	*line;
+	char	**split;
+	
+	if (ft_mapalloc(filename, map))
+		return (-1);
+	fd = open(filename, O_RDONLY);
+	if (!fd)
+		return (ft_free_map(fd, map));
+	if (ft_parse_points(fd, line, split, map))
+		return (ft_free_map(fd, map));
 	return (0);
 }

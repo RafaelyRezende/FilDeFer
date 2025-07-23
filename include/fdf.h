@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/22 12:20:53 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/23 15:48:14 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <stdio.h>
 
 # define COLOR1 0x00FF00FF
-# define MAX_HEIGHT 1980
-# define MAX_WIDTH 1080
+# define MAX_HEIGHT 1080
+# define MAX_WIDTH 1920
 # define WINDOW_NAME "WINWINWIN"
 # define M_PI 3.14159265358979323846
 # define MAT4_DIM 16
@@ -130,5 +130,8 @@ void	ft_swap(float*, float*);
 void	ft_init_line(t_line *, t_vec4, t_vec4);
 t_vec4	*ft_parser(char *);
 void	ft_connect(t_window *, t_map *);
-int	init_map(const char*, t_map*);
+int	init_map(const char*, t_map**);
+void	apply_transform(t_vec4 *, t_mat4 *);
+void	ft_pipeline(t_mat4 *, t_trans_vals, t_trig_lookup *);
+void	init_tables(t_trig_lookup *);
 #endif
