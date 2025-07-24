@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/23 16:10:26 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/24 10:42:48 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	ft_free_map(int fd, t_map **map)
 static
 int	ft_mapalloc(const char *filename, t_map **map)
 {
-	*map = (t_map *)malloc(sizeof(t_map));
+	*map = (t_map *)ft_calloc(sizeof(t_map), 1);
 	if (!*map)
 		return (-1);
 	(*map)->mapRow = 0;
@@ -100,7 +100,7 @@ int	ft_mapalloc(const char *filename, t_map **map)
 	if ((ft_get_dim(filename, &((*map)->mapRow), &((*map)->mapCol)) < 0))
 		return (free(*map), -1);
 	(*map)->num_points = (*map)->mapRow * (*map)->mapCol;
-	(*map)->points = malloc(sizeof(t_vec4) * (*map)->num_points);
+	(*map)->points = ft_calloc(sizeof(t_vec4), (*map)->num_points);
 	if (!(*map)->points)
 		return (free(*map), -1);
 	return (0);

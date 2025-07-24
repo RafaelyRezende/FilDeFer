@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:27:21 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/23 17:56:25 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:26:35 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	ft_identity(t_mat4 *id)
 
 	i = 0;
 	while (i < DIM)
-		id->matrix[5 * i++] = MAT4_IDENTITY_VAL;
+	{
+		id->matrix[DIM * i + i] = MAT4_IDENTITY_VAL;
+		i++;
+	}
 }
 
 void	init_tables(t_trig_lookup *cache)
@@ -73,7 +76,6 @@ void	ft_norm(t_vec4 *q)
 	q->w /= res;
 }
 
-static
 t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cache)
 {
 	t_vec4		q;
@@ -98,7 +100,6 @@ t_vec4	quat_from_euler(float x_rad, float y_rad, float z_rad, t_trig_lookup *cac
 	return (q);
 }
 
-static
 t_matrix_const	init_cons_mat(t_vec4 q)
 {
 	t_matrix_const	cons;
@@ -115,7 +116,6 @@ t_matrix_const	init_cons_mat(t_vec4 q)
 	return (cons);
 }
 
-static
 void	mat4_from_quat(t_mat4 *m, t_matrix_const cons)
 {
 	m->matrix[0]  = 1.0f - 2.0f * (cons.yy + cons.zz);
@@ -222,6 +222,24 @@ void apply_transform(t_vec4 *p, t_mat4 *m)
 	p->z = x * m->matrix[8] + y * m->matrix[9] + z * m->matrix[10] + m->matrix[11];
 }
 
+void	iso_project(t_map **map)
+{
+	int	i;
+	float	iso_x;
+	float	iso_y;
+	float	iso_z;
+
+	i = 0;
+	while (i < (*map)->num_points)
+	{
+		iso_x = (*map)->points[i].x;
+		iso_y = (*map)->points[i].y;
+		iso_z = (*map)->points[i].z;
+		(*map)->points[i].x = (iso_x - iso_z) * ISO_X_SCALE;
+		(*map)->points[i].y = (iso_x + 2 * iso_y - iso_z) * ISO_Y_SCALE;
+		i++;
+	}
+}
 /*
 int main(void)
 {

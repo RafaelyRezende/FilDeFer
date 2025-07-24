@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 09:14:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/23 15:48:14 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:26:37 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <math.h>
 # include <errno.h>
 # include <stdio.h>
+# include <assert.h>
 
 # define COLOR1 0x00FF00FF
 # define MAX_HEIGHT 1080
@@ -33,6 +34,9 @@
 # define RAD_MIN 0.0f
 # define RAD_MAX (2.0f * M_PI)
 # define TABLE_SIZE ((int)((RAD_MAX - RAD_MIN) / RAD_STEP) + 1)
+# define M_SQRT6 2.44948974278317809820f
+# define ISO_Y_SCALE M_SQRT6 / 6
+# define ISO_X_SCALE M_SQRT2 / 2
 
 typedef struct	s_vec4
 {
@@ -134,4 +138,5 @@ int	init_map(const char*, t_map**);
 void	apply_transform(t_vec4 *, t_mat4 *);
 void	ft_pipeline(t_mat4 *, t_trans_vals, t_trig_lookup *);
 void	init_tables(t_trig_lookup *);
+void	iso_project(t_map **map);
 #endif

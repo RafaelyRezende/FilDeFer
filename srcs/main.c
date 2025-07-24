@@ -6,43 +6,25 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 13:05:58 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/23 18:13:19 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:25:14 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdio.h>
 
-/*
-   int	main(int argc, char** argv)
-   {
-	t_window		params_window;
-	t_env			params_env;
-	t_map4			trans_maprix;
-	t_trig_lookup	trig_table;
-	t_quat_const	q_const;
-	t_trans_vals	trans_vals;
-
-	if (argc != 2)
-	{
-		ft_printf("Wrong number os arguments.");
-		return (-1);
-	}
-}
-*/
-
 static
 void	init_vals(t_trans_vals *obj)
 {
-	obj->sx = 40.0f;
-	obj->sy = 40.0f;
-	obj->sz = 40.0f;
+	obj->sx = 15.0f;
+	obj->sy = 15.0f;
+	obj->sz = 15.0f;
 	obj->tx = 300.0f;
 	obj->ty = 300.0f;
 	obj->tz = 0.0f;
 	obj->rx = 0.0;
 	obj->ry = 0.0;
-	obj->rz = 0.0f;
+	obj->rz = M_PI/2;
 }
 
 int	main(int argc, char **argv)
@@ -68,7 +50,17 @@ int	main(int argc, char **argv)
 		return (mlx_destroy_window(this.mlx, this.mlx_win));
 	init_vals(&obj);
 	init_tables(&cache);
+	ft_memset(&op_matrix, 0, sizeof(t_mat4));
 	ft_pipeline(&op_matrix, obj, &cache);
+	i = 0;
+	while (i < map->num_points)
+		apply_transform(&map->points[i++], &op_matrix);
+	iso_project(&map);
+	ft_connect(&img, map);
+	mlx_put_image_to_window(this.mlx, this.mlx_win, img.img, 0, 0);
+	mlx_loop(this.mlx);
+}
+/*
 	i = 0;
 	while (i < map->num_points)
 	{
@@ -78,16 +70,18 @@ int	main(int argc, char **argv)
 		printf("\n\n");
 		i++;
 	}
-	/*
-	int i = 0;
+	i = 0;
 	printf("(x), (y), (z)\n\n");
 	while (i < map->num_points)
 	{
+		map->points[i].x *= 1.0f;
+		map->points[i].y *= 1.0f;
+		map->points[i].z *= 1.0f;
+		map->points[i].x += 100.0f;
+		map->points[i].y += 100.0f;
 		printf("%f, %f, %f\n", map->points[i].x, map->points[i].y, map->points[i].z);
 		i++;
 	}
+	}
 	*/
-	ft_connect(&img, map);
-	mlx_put_image_to_window(this.mlx, this.mlx_win, img.img, 0, 0);
-	mlx_loop(this.mlx);
-}
+
