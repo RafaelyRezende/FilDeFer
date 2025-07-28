@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 07:39:26 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 09:45:08 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,36 @@ void	print_grid(t_map *map)
 	}
 }
 
+static
+int	ft_expose(t_env *this)
+{
+	mlx_put_image_to_window(this->mlx, this->mlx_win, this->window.img, 0, 0);
+	return (0);
+}
+
+int	main(int argc, char **argv)
+{
+	t_env		this;
+
+	if (argc != 2)
+		return (ft_error("number of arguments"));
+	this.mlx = mlx_init();
+	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
+	this.window.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
+	this.window.addr = mlx_get_data_addr(this.window.img, &this.window.bits_per_pixel, &this.window.line_length, &this.window.endian);
+	if (init_map(argv[1], &this.map))
+		return (mlx_destroy_window(this.mlx, this.mlx_win));
+	print_grid(this.map);
+	ft_iso(&this.map, 15);
+	print_grid(this.map);
+	ft_connect(&this.window, this.map);
+	mlx_put_image_to_window(this.mlx, this.mlx_win, this.window.img, 0, 0);
+	mlx_key_hook(this.mlx_win, ft_keypress, &this);
+	mlx_hook(this.mlx_win, 2, 1L<<0, ft_keypress, &this);
+	mlx_expose_hook(this.mlx_win, ft_expose, &this);
+	mlx_loop(this.mlx);
+	return (0);
+}
 /*
 static
 void	print_quat(t_map *map)
@@ -37,27 +67,3 @@ void	print_quat(t_map *map)
 		printf("%f,%f,%f,%f\n", map->q.w, map->q.x, map->q.y, map->q.z);
 }
 */
-int	main(int argc, char **argv)
-{
-	t_env		this;
-	t_window	img;
-
-	if (argc != 2)
-		return (ft_error("number of arguments"));
-	this.mlx = mlx_init();
-	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
-	img.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	if (init_map(argv[1], &this.map))
-		return (mlx_destroy_window(this.mlx, this.mlx_win));
-	init_map(argv[1], &this.map);
-	print_grid(this.map);
-	ft_iso(&this.map, 15);
-	print_grid(this.map);
-	ft_connect(&img, this.map);
-	mlx_put_image_to_window(this.mlx, this.mlx_win, img.img, 0, 0);
-	mlx_loop(this.mlx);
-	free(this.map->grid);
-	free(this.map);
-	return (0);
-}

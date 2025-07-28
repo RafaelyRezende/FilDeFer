@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 07:49:25 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 10:47:39 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,11 @@ typedef struct	s_window
 
 typedef struct	s_env
 {
-	t_map	*map;
-	t_quat	*q;
-	void	*mlx;
-	void	*mlx_win;
+	t_map		*map;
+	t_window	window;
+	t_quat		*q;
+	void		*mlx;
+	void		*mlx_win;
 }	t_env;
 //-------------------------------QUATERNIONS FUNCTIONS--------------
 t_quat	ft_quat_constructor(float, float, float, float);
@@ -108,4 +109,8 @@ void	ft_swap(float*, float*);
 void	ft_init_line(t_line *, t_point, t_point);
 t_point	*ft_parser(char *);
 void	ft_connect(t_window *, t_map *);
+//-------------------------------KEYPRESS FUNCTIONS-----------------------
+int		ft_keypress(int, t_env*);
+//-------------------------------SORTING FUNCTIONS-----------------------
+void	ft_quicksort(t_map*);
 #endif
