@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 09:45:08 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 13:02:30 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,6 @@ int	ft_error(const char* msg)
 {
 	printf("Error %s...", msg);
 	return (-1);
-}
-
-static
-void	print_grid(t_map *map)
-{
-	unsigned int i = 0;
-	while (i < map->size)
-	{
-		printf("%f,%f,%f\n", map->grid[i].x, map->grid[i].y, map->grid[i].z);
-		i++;
-	}
 }
 
 static
@@ -49,9 +38,8 @@ int	main(int argc, char **argv)
 	this.window.addr = mlx_get_data_addr(this.window.img, &this.window.bits_per_pixel, &this.window.line_length, &this.window.endian);
 	if (init_map(argv[1], &this.map))
 		return (mlx_destroy_window(this.mlx, this.mlx_win));
-	print_grid(this.map);
 	ft_iso(&this.map, 15);
-	print_grid(this.map);
+	ft_sort_map(this.map);
 	ft_connect(&this.window, this.map);
 	mlx_put_image_to_window(this.mlx, this.mlx_win, this.window.img, 0, 0);
 	mlx_key_hook(this.mlx_win, ft_keypress, &this);
@@ -65,5 +53,15 @@ static
 void	print_quat(t_map *map)
 {
 		printf("%f,%f,%f,%f\n", map->q.w, map->q.x, map->q.y, map->q.z);
+}
+static
+void	print_grid(t_map *map)
+{
+	unsigned int i = 0;
+	while (i < map->size)
+	{
+		printf("%f,%f,%f\n", map->grid[i].x, map->grid[i].y, map->grid[i].z);
+		i++;
+	}
 }
 */

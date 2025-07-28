@@ -26,7 +26,7 @@ PARSER_SRCS= srcs/parser.c srcs/parser_main.c
 
 TRANS_SRCS = srcs/transforms.c srcs/tester_transforms.c
 
-UNIT_SRCS= srcs/render.c srcs/ft_swap.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/transforms2.c srcs/events.c srcs/unit_tester.c
+UNIT_SRCS= srcs/sort.c srcs/render.c srcs/ft_swap.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/transforms2.c srcs/events.c srcs/unit_tester.c
 
 ## Includes
 LIBFT =libft/libft.a

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/27 20:55:42 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 12:55:56 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,15 @@ void	ft_connect(t_window *img, t_map *map)
 {
 	int	i;
 	int	j;
+	int	tmp;
 
+	i = 0;
+	while (i < (int)map->size)
+	{
+		tmp = map->indices[i];
+		ft_put_pixel(img, map->grid[tmp].x, map->grid[tmp].y, map->grid[tmp].color);
+		i++;
+	}
 	i = 0;
 	while (i < map->rows)
 	{

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 10:47:39 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 12:53:25 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,9 @@ typedef struct	s_map
 {
 	t_point				*grid;
 	unsigned int		size;
-	int		rows;
-	int		cols;
+	int					rows;
+	int					cols;
+	int					*indices;
 }	t_map;
 //-------------------------------ENVIRONMENT STRUCTURE-------------
 typedef struct	s_window
@@ -101,6 +102,7 @@ t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
 //-------------------------------MAP FUNCTIONS-----------------------
 void	ft_iso(t_map**, float);
+int		ft_sort_map(t_map*);
 int		init_map(const char*, t_map**);
 float	ft_vec3_mult(t_vec3, t_vec3);
 //-------------------------------SCREEN FUNCTIONS-----------------------
@@ -112,5 +114,4 @@ void	ft_connect(t_window *, t_map *);
 //-------------------------------KEYPRESS FUNCTIONS-----------------------
 int		ft_keypress(int, t_env*);
 //-------------------------------SORTING FUNCTIONS-----------------------
-void	ft_quicksort(t_map*);
 #endif
