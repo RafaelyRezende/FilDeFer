@@ -1,0 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unit_tester.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
+/*   Updated: 2025/07/28 07:39:26 by rluis-ya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "iso_fdf.h"
+
+static
+int	ft_error(const char* msg)
+{
+	printf("Error %s...", msg);
+	return (-1);
+}
+
+static
+void	print_grid(t_map *map)
+{
+	unsigned int i = 0;
+	while (i < map->size)
+	{
+		printf("%f,%f,%f\n", map->grid[i].x, map->grid[i].y, map->grid[i].z);
+		i++;
+	}
+}
+
+/*
+static
+void	print_quat(t_map *map)
+{
+		printf("%f,%f,%f,%f\n", map->q.w, map->q.x, map->q.y, map->q.z);
+}
+*/
+int	main(int argc, char **argv)
+{
+	t_env		this;
+	t_window	img;
+
+	if (argc != 2)
+		return (ft_error("number of arguments"));
+	this.mlx = mlx_init();
+	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
+	img.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
+	if (init_map(argv[1], &this.map))
+		return (mlx_destroy_window(this.mlx, this.mlx_win));
+	init_map(argv[1], &this.map);
+	print_grid(this.map);
+	ft_iso(&this.map, 15);
+	print_grid(this.map);
+	ft_connect(&img, this.map);
+	mlx_put_image_to_window(this.mlx, this.mlx_win, img.img, 0, 0);
+	mlx_loop(this.mlx);
+	free(this.map->grid);
+	free(this.map);
+	return (0);
+}

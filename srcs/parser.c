@@ -6,11 +6,11 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/24 10:42:48 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/26 16:10:32 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "iso_fdf.h"
 
 static
 int	ft_free_line(char *line)
@@ -83,7 +83,7 @@ int	ft_get_dim(const char *filename, int *row, int *col)
 static
 int	ft_free_map(int fd, t_map **map)
 {
-	free((*map)->points);
+	free((*map)->grid);
 	free(*map);
 	close(fd);
 	return (-1);
@@ -95,25 +95,25 @@ int	ft_mapalloc(const char *filename, t_map **map)
 	*map = (t_map *)ft_calloc(sizeof(t_map), 1);
 	if (!*map)
 		return (-1);
-	(*map)->mapRow = 0;
-	(*map)->mapCol = -1;
-	if ((ft_get_dim(filename, &((*map)->mapRow), &((*map)->mapCol)) < 0))
+	(*map)->rows = 0;
+	(*map)->cols = -1;
+	if ((ft_get_dim(filename, &((*map)->rows), &((*map)->cols)) < 0))
 		return (free(*map), -1);
-	(*map)->num_points = (*map)->mapRow * (*map)->mapCol;
-	(*map)->points = ft_calloc(sizeof(t_vec4), (*map)->num_points);
-	if (!(*map)->points)
+	(*map)->size = (*map)->rows * (*map)->cols;
+	(*map)->grid = ft_calloc(sizeof(t_point), (*map)->size);
+	if (!(*map)->grid)
 		return (free(*map), -1);
 	return (0);
 }
 
 static
-int	ft_parse_points(int fd, char *line, char **split, t_map **map)
+int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 {
-	int	i;
-	int	j;
+	unsigned int	i;
+	unsigned int	j;
 
 	i = 0;
-	while (i < (*map)->num_points)
+	while (i < (*map)->size)
 	{
 		line = get_next_line(fd);
 		if (!line)
@@ -125,10 +125,10 @@ int	ft_parse_points(int fd, char *line, char **split, t_map **map)
 		free(line);
 		while (split[++j])
 		{
-			(*map)->points[i].x = (float) j;
-			(*map)->points[i].z = (float) (ft_atoi(split[j]));
-			(*map)->points[i].y = (float) (i / (*map)->mapCol);
-			(*map)->points[i].w = 0.0f;
+			(*map)->grid[i].x = (float) j;
+			(*map)->grid[i].z = (float) (ft_atoi(split[j]));
+			(*map)->grid[i].y = (float) (i / (*map)->cols);
+			(*map)->grid[i].color = COLOR;
 			i++;
 		}
 		(void)ft_free_split(split);
@@ -138,16 +138,18 @@ int	ft_parse_points(int fd, char *line, char **split, t_map **map)
 
 int	init_map(const char *filename, t_map **map)//, t_mat4 *quat
 {
-	int	fd;
+	int		fd;
 	char	*line;
 	char	**split;
 	
+	line = NULL;
+	split = NULL;
 	if (ft_mapalloc(filename, map))
 		return (-1);
 	fd = open(filename, O_RDONLY);
 	if (!fd)
 		return (ft_free_map(fd, map));
-	if (ft_parse_points(fd, line, split, map))
+	if (ft_parse_grid(fd, line, split, map))
 		return (ft_free_map(fd, map));
 	return (0);
 }
