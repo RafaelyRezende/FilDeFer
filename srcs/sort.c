@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:11:37 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 12:58:45 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 15:15:37 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static inline
 float	ft_get_depth(t_point p)
 {
-	return (p.x + p.y + p.z);
+	return (p.x + p.y + p.z_ori);
 }
 
 static

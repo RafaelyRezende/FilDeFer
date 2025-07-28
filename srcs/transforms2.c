@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/27 20:17:04 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 17:56:03 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ t_vec3	ft_rotate_vector(t_quat q, t_vec3 u)
 	result = ft_vec3_constructor(tmp.x, tmp.y, tmp.z);
 	return (result);
 }
-
+/*
 void	ft_iso(t_map **map, float scaler)
 {
 	unsigned int	i;
@@ -131,12 +131,50 @@ void	ft_iso(t_map **map, float scaler)
 	i = 0;
 	while (i < (*map)->size)
 	{
-		tmpX = (*map)->grid[i].x;
-		tmpY = (*map)->grid[i].y;
+		tmpX = (*map)->grid[i].x_ori;
+		tmpY = (*map)->grid[i].y_ori;
 		(*map)->grid[i].x = (tmpX - tmpY) * ISO_X;
-		(*map)->grid[i].y = (tmpX + tmpY) * ISO_Y - (*map)->grid[i].z;
+		(*map)->grid[i].y = (tmpX + tmpY) * ISO_Y - (*map)->grid[i].z_ori;
 		(*map)->grid[i].x = (*map)->grid[i].x * scaler + SCREEN_X;
 		(*map)->grid[i].y = (*map)->grid[i].y * scaler + SCREEN_Y;
 		i++;
 	}
+}
+*/
+void	ft_apply_rotation(t_env *env, float scaler)
+{
+	unsigned int	i;
+	t_vec3			orig;
+	t_vec3			rotated;
+
+	i = 0;
+	while (i < env->map->size)
+	{
+		orig = ft_vec3_constructor(env->map->grid[i].x_ori,\
+		env->map->grid[i].y_ori,\
+		env->map->grid[i].z_ori);
+		rotated = ft_rotate_vector(*env->q_axis, orig);
+		env->map->grid[i].x = (rotated.x - rotated.y) * ISO_X;
+		env->map->grid[i].y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
+		env->map->grid[i].x = env->map->grid[i].x * scaler + SCREEN_X;
+		env->map->grid[i].y = env->map->grid[i].y * scaler + SCREEN_Y;
+		i++;
+	}
+}
+
+void	ft_rotate_map(t_env* env, float rad)
+{
+	t_quat	rotation;
+	t_quat	new_rot;
+	t_vec3	v;
+
+	v = ft_vec3_constructor(0.0f, 0.0f, 1.0f);
+	rotation = ft_quat_from_angle(v, rad);
+	new_rot = ft_quat_mult(rotation, *env->q_axis);
+	*env->q_axis = new_rot;
+	ft_apply_rotation(env, env->map_scaler);
+	ft_sort_map(env->map);
+	ft_clear_image(&env->window);
+	ft_connect(&env->window, env->map);
+	mlx_put_image_to_window(env->mlx, env->mlx_win, env->window.img, 0, 0);
 }

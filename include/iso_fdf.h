@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 12:53:25 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/28 17:57:20 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@
 # define NAME "FDF"
 # define SCREEN_H 1080
 # define SCREEN_W 1920
-# define SCREEN_X (800 / 2)
-# define SCREEN_Y (1200 / 2) 
+# define SCREEN_X (1920/ 2)
+# define SCREEN_Y (1080/ 2) 
 # define M_PI 3.14159265358979323846f
 # define ISO_X 0.86602540378f
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
 # define COLOR 0XF2FEFA
+# define ANGLE_STEP M_PI * 0.01
 
 //-------------------------------LINE CONSTANTS-------------------
 typedef struct	s_line
@@ -59,7 +60,9 @@ typedef struct	s_point
 {
 	float	x;
 	float	y;
-	float	z;
+	float	x_ori;
+	float	y_ori;
+	float	z_ori;
 	int		color;
 }	t_point;
 
@@ -85,9 +88,11 @@ typedef struct	s_env
 {
 	t_map		*map;
 	t_window	window;
-	t_quat		*q;
+	t_quat		*q_axis;
 	void		*mlx;
 	void		*mlx_win;
+	float		map_scaler;
+	float		max_dim;
 }	t_env;
 //-------------------------------QUATERNIONS FUNCTIONS--------------
 t_quat	ft_quat_constructor(float, float, float, float);
@@ -100,18 +105,22 @@ t_vec3	ft_vec3_norm(t_vec3);
 t_vec3	ft_vec3_add(t_vec3, t_vec3);
 t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
-//-------------------------------MAP FUNCTIONS-----------------------
-void	ft_iso(t_map**, float);
+//-------------------------------MAP FUNCTIONS-------------------------
+//void	ft_iso(t_map**, float);
 int		ft_sort_map(t_map*);
 int		init_map(const char*, t_map**);
 float	ft_vec3_mult(t_vec3, t_vec3);
+void	ft_apply_rotation(t_env*, float);
+void	ft_rotate_map(t_env*, float);
 //-------------------------------SCREEN FUNCTIONS-----------------------
 void	ft_put_pixel(t_window *, float, float, float);
 void	ft_swap(float*, float*);
 void	ft_init_line(t_line *, t_point, t_point);
 t_point	*ft_parser(char *);
 void	ft_connect(t_window *, t_map *);
-//-------------------------------KEYPRESS FUNCTIONS-----------------------
+//-------------------------------KEYPRESS FUNCTIONS----------------------
 int		ft_keypress(int, t_env*);
-//-------------------------------SORTING FUNCTIONS-----------------------
+//-------------------------------GARBAGE COLLECTION----------------------
+void	ft_clean_map(t_map *);
+void	ft_clear_image(t_window *);
 #endif
