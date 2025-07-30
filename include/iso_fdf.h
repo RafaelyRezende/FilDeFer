@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/30 15:50:20 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:07:09 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@
 # define ROT_SPEED 0.05f
 # define COLOR 0XF2FEFA
 # define ANGLE_STEP M_PI * 0.01f
-# define TRANS_STEP 1.0f
+# define TRANS_STEP_X 1.0f
+# define TRANS_STEP_Y 0.5f
 
 //-------------------------------LINE CONSTANTS-------------------
 typedef struct	s_line
@@ -94,7 +95,8 @@ typedef struct	s_env
 	void		*mlx_win;
 	float		map_scaler;
 	float		max_dim;
-	float		trans;
+	float		trans_x;
+	float		trans_y;
 }	t_env;
 //-------------------------------QUATERNIONS FUNCTIONS--------------
 t_quat	ft_quat_constructor(float, float, float, float);

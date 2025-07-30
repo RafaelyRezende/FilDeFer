@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/30 15:49:02 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:14:58 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	main(int argc, char **argv)
 		this.max_dim = this.map->rows;
 	else
 		this.max_dim = this.map->cols;
+	this.trans_x = 0.0f;
+	this.trans_y = 0.0f;
 	this.map_scaler = (SCREEN_W * 0.7f) / (this.max_dim * 2.0f);
 	*this.q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
 	ft_apply_rotation(&this, this.map_scaler);

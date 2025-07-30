@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/30 15:46:05 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:10:26 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,8 @@ void	ft_apply_rotation(t_env *env, float scaler)
 		rotated = ft_rotate_vector(*env->q_axis, orig);
 		env->map->grid[i].x = (rotated.x - rotated.y) * ISO_X;
 		env->map->grid[i].y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
-		env->map->grid[i].x = (env->map->grid[i].x + env->trans) * scaler + SCREEN_X ;
-		env->map->grid[i].y = (env->map->grid[i].y + env->trans) * scaler + SCREEN_Y + env->trans;
+		env->map->grid[i].x = (env->map->grid[i].x + env->trans_x) * scaler + SCREEN_X + env->trans_x;
+		env->map->grid[i].y = (env->map->grid[i].y + env->trans_y) * scaler + SCREEN_Y + env->trans_y;
 		i++;
 	}
 }
