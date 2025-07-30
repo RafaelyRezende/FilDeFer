@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 17:56:03 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:46:05 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,8 @@ void	ft_iso(t_map **map, float scaler)
 void	ft_apply_rotation(t_env *env, float scaler)
 {
 	unsigned int	i;
-	t_vec3			orig;
-	t_vec3			rotated;
+	t_vec3		orig;
+	t_vec3		rotated;
 
 	i = 0;
 	while (i < env->map->size)
@@ -156,8 +156,8 @@ void	ft_apply_rotation(t_env *env, float scaler)
 		rotated = ft_rotate_vector(*env->q_axis, orig);
 		env->map->grid[i].x = (rotated.x - rotated.y) * ISO_X;
 		env->map->grid[i].y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
-		env->map->grid[i].x = env->map->grid[i].x * scaler + SCREEN_X;
-		env->map->grid[i].y = env->map->grid[i].y * scaler + SCREEN_Y;
+		env->map->grid[i].x = (env->map->grid[i].x + env->trans) * scaler + SCREEN_X ;
+		env->map->grid[i].y = (env->map->grid[i].y + env->trans) * scaler + SCREEN_Y + env->trans;
 		i++;
 	}
 }

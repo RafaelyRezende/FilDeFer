@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 17:57:20 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:50:20 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
 # define COLOR 0XF2FEFA
-# define ANGLE_STEP M_PI * 0.01
+# define ANGLE_STEP M_PI * 0.01f
+# define TRANS_STEP 1.0f
 
 //-------------------------------LINE CONSTANTS-------------------
 typedef struct	s_line
@@ -63,25 +64,25 @@ typedef struct	s_point
 	float	x_ori;
 	float	y_ori;
 	float	z_ori;
-	int		color;
+	int	color;
 }	t_point;
 
 typedef struct	s_map
 {
-	t_point				*grid;
-	unsigned int		size;
-	int					rows;
-	int					cols;
-	int					*indices;
+	t_point		*grid;
+	unsigned int	size;
+	int		rows;
+	int		cols;
+	int		*indices;
 }	t_map;
 //-------------------------------ENVIRONMENT STRUCTURE-------------
 typedef struct	s_window
 {
 	void	*img;
 	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
+	int	bits_per_pixel;
+	int	line_length;
+	int	endian;
 }	t_window;
 
 typedef struct	s_env
@@ -93,6 +94,7 @@ typedef struct	s_env
 	void		*mlx_win;
 	float		map_scaler;
 	float		max_dim;
+	float		trans;
 }	t_env;
 //-------------------------------QUATERNIONS FUNCTIONS--------------
 t_quat	ft_quat_constructor(float, float, float, float);
@@ -107,8 +109,8 @@ t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
 //-------------------------------MAP FUNCTIONS-------------------------
 //void	ft_iso(t_map**, float);
-int		ft_sort_map(t_map*);
-int		init_map(const char*, t_map**);
+int	ft_sort_map(t_map*);
+int	init_map(const char*, t_map**);
 float	ft_vec3_mult(t_vec3, t_vec3);
 void	ft_apply_rotation(t_env*, float);
 void	ft_rotate_map(t_env*, float);
@@ -119,7 +121,7 @@ void	ft_init_line(t_line *, t_point, t_point);
 t_point	*ft_parser(char *);
 void	ft_connect(t_window *, t_map *);
 //-------------------------------KEYPRESS FUNCTIONS----------------------
-int		ft_keypress(int, t_env*);
+int	ft_keypress(int, t_env*);
 //-------------------------------GARBAGE COLLECTION----------------------
 void	ft_clean_map(t_map *);
 void	ft_clear_image(t_window *);

@@ -8,7 +8,7 @@ CDB = -g -pg -O3
 
 NAME = fdf
 
-MAIN_SRC = srcs/render.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/ft_swap.c srcs/main.c srcs/transforms.c
+MAIN_SRC = srcs/garbage_collection.c srcs/sort.c srcs/render.c srcs/line_utils.c srcs/parser.c srcs/transforms2.c  srcs/events.c srcs/unit_tester.c
 
 OBJS = $(MAIN_SRC:.c=.o)
 
@@ -26,7 +26,7 @@ PARSER_SRCS= srcs/parser.c srcs/parser_main.c
 
 TRANS_SRCS = srcs/transforms.c srcs/tester_transforms.c
 
-UNIT_SRCS= srcs/garbage_collection.c srcs/sort.c srcs/render.c srcs/ft_swap.c srcs/ft_put_pixel.c srcs/ft_init_line.c srcs/parser.c srcs/transforms2.c srcs/events.c srcs/unit_tester.c
+UNIT_SRCS= srcs/garbage_collection.c srcs/sort.c srcs/render.c srcs/line_utils.c srcs/parser.c srcs/transforms2.c srcs/events.c srcs/unit_tester.c
 
 ## Includes
 LIBFT =libft/libft.a
