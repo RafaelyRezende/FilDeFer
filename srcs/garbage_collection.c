@@ -6,11 +6,29 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:06:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 16:15:00 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 15:50:20 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iso_fdf.h"
+
+int	ft_clean_exit(t_env *env)
+{
+	if (env->map)
+		ft_clean_map(env->map);
+	if (env->q_axis)
+		free(env->q_axis);
+	if (env->window.img)
+		mlx_destroy_image(env->mlx, env->window.img);
+	if (env->mlx_win)
+		mlx_destroy_window(env->mlx, env->mlx_win);
+	if (env->mlx)
+	{
+		mlx_destroy_display(env->mlx);
+		free(env->mlx);
+	}
+	exit (0);
+}
 
 void	ft_clean_map(t_map *map)
 {

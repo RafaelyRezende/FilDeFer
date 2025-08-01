@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:11:37 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 15:15:37 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:58:11 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static
 int	ft_partition(int *indices, t_point *grid, int low, int high)
 {
 	float	pivot;
-	int		i;
-	int		j;
-	int		tmp;
+	int	i;
+	int	j;
+	int	tmp;
 
 	pivot = ft_get_depth(grid[indices[(low + high) / 2]]);
 	i = low - 1;
@@ -75,6 +75,8 @@ int	ft_sort_map(t_map *map)
 		i++;
 	}
 	ft_quicksort(indices, map->grid, 0, map->size - 1);
+	if (map->indices)
+		free(map->indices);
 	map->indices = indices;
 	return (0);
 }

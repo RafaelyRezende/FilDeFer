@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/30 18:07:09 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 15:17:27 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define SCREEN_W 1920
 # define SCREEN_X (1920/ 2)
 # define SCREEN_Y (1080/ 2) 
-# define M_PI 3.14159265358979323846f
+//# define M_PI 3.14159265358979323846f
 # define ISO_X 0.86602540378f
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
@@ -127,4 +127,5 @@ int	ft_keypress(int, t_env*);
 //-------------------------------GARBAGE COLLECTION----------------------
 void	ft_clean_map(t_map *);
 void	ft_clear_image(t_window *);
+int	ft_clean_exit(t_env *);
 #endif
