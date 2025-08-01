@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 15:17:52 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 18:12:47 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,7 @@ t_vec3	ft_vec3_norm(t_vec3 u)
 
 t_vec3	ft_vec3_add(t_vec3 u, t_vec3 v)
 {
-	t_vec3	result;
-
-	result.x = u.x + v.x;
-	result.y = u.y + v.y;
-	result.x = u.z + v.z;
-	return (result);
+	return (ft_vec3_constructor((u.x + v.x), (u.y + v.y), (u.z + v.z)));
 }
 
 float	ft_vec3_mult(t_vec3 u, t_vec3 v)
@@ -121,31 +116,51 @@ t_vec3	ft_rotate_vector(t_quat q, t_vec3 u)
 	result = ft_vec3_constructor(tmp.x, tmp.y, tmp.z);
 	return (result);
 }
-/*
-void	ft_iso(t_map **map, float scaler)
-{
-	unsigned int	i;
-	float			tmpX;
-	float			tmpY;
 
+t_limits	ft_set_limits(t_map *map)
+{
+	t_limits	lims;
+	unsigned int	i;
+
+	lims.x_min = SCREEN_W;
+	lims.x_max = -SCREEN_W;
+	lims.y_min = SCREEN_H;
+	lims.y_max = -SCREEN_H;
+	lims.z_min = SCREEN_W;
+	lims.z_max = -SCREEN_W;
 	i = 0;
-	while (i < (*map)->size)
+
+	while (i < map->size)
 	{
-		tmpX = (*map)->grid[i].x_ori;
-		tmpY = (*map)->grid[i].y_ori;
-		(*map)->grid[i].x = (tmpX - tmpY) * ISO_X;
-		(*map)->grid[i].y = (tmpX + tmpY) * ISO_Y - (*map)->grid[i].z_ori;
-		(*map)->grid[i].x = (*map)->grid[i].x * scaler + SCREEN_X;
-		(*map)->grid[i].y = (*map)->grid[i].y * scaler + SCREEN_Y;
+		if (lims.x_min > map->grid[i].x_ori)
+			lims.x_min = map->grid[i].x_ori;
+		if (lims.x_max < map->grid[i].x_ori)
+			lims.x_max = map->grid[i].x_ori;
+		if (lims.y_min > map->grid[i].y_ori)
+			lims.y_min = map->grid[i].y_ori;
+		if (lims.y_max < map->grid[i].y_ori)
+			lims.y_max = map->grid[i].y_ori;
+		if (lims.z_min > map->grid[i].z_ori)
+			lims.z_min = map->grid[i].z_ori;
+		if (lims.z_max < map->grid[i].z_ori)
+			lims.z_max = map->grid[i].z_ori;
 		i++;
 	}
+	return (lims);
 }
-*/
-void	ft_apply_rotation(t_env *env, float scaler)
+
+void	ft_apply_rotation(t_env *env)
 {
 	unsigned int	i;
 	t_vec3		orig;
+	t_vec3		base_trans;
+	t_vec3		translated;
 	t_vec3		rotated;
+
+	base_trans = ft_vec3_constructor(\
+			(env->limits.x_max - env->limits.x_min) * 0.5f,\
+			(env->limits.y_max - env->limits.y_min) * 0.5f,\
+			(env->limits.z_max - env->limits.z_min)* 0.5f);
 
 	i = 0;
 	while (i < env->map->size)
@@ -153,26 +168,25 @@ void	ft_apply_rotation(t_env *env, float scaler)
 		orig = ft_vec3_constructor(env->map->grid[i].x_ori,\
 		env->map->grid[i].y_ori,\
 		env->map->grid[i].z_ori);
-		rotated = ft_rotate_vector(*env->q_axis, orig);
+		translated = ft_vec3_add(orig, ft_vec3_scale(base_trans, -1.0f));
+		rotated = ft_rotate_vector(*env->q_axis, translated);
 		env->map->grid[i].x = (rotated.x - rotated.y) * ISO_X;
 		env->map->grid[i].y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
-		env->map->grid[i].x = (env->map->grid[i].x + env->trans_x) * scaler + SCREEN_X + env->trans_x;
-		env->map->grid[i].y = (env->map->grid[i].y + env->trans_y) * scaler + SCREEN_Y + env->trans_y;
+		env->map->grid[i].x = (env->map->grid[i].x + env->trans_x) * env->map_scaler + SCREEN_X + env->trans_x;
+		env->map->grid[i].y = (env->map->grid[i].y + env->trans_y) * env->map_scaler + SCREEN_Y + env->trans_y;
 		i++;
 	}
 }
 
-void	ft_rotate_map(t_env* env, float rad)
+void	ft_rotate_map(t_env* env, t_vec3 v, float rad)
 {
 	t_quat	rotation;
 	t_quat	new_rot;
-	t_vec3	v;
 
-	v = ft_vec3_constructor(0.0f, 0.0f, 1.0f);
 	rotation = ft_quat_from_angle(v, rad);
 	new_rot = ft_quat_mult(rotation, *env->q_axis);
 	*env->q_axis = new_rot;
-	ft_apply_rotation(env, env->map_scaler);
+	ft_apply_rotation(env);
 	ft_sort_map(env->map);
 	ft_clear_image(&env->window);
 	ft_connect(&env->window, env->map);

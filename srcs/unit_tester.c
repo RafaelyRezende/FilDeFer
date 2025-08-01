@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 15:17:43 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 18:12:22 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	main(int argc, char **argv)
 	this.trans_y = 0.0f;
 	this.map_scaler = (SCREEN_W * 0.7f) / (this.max_dim * 2.0f);
 	*this.q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
-	ft_apply_rotation(&this, this.map_scaler);
+	ft_set_limits(this.map);
+	ft_apply_rotation(&this);
 	ft_sort_map(this.map);
 	ft_connect(&this.window, this.map);
 	mlx_put_image_to_window(this.mlx, this.mlx_win, this.window.img, 0, 0);

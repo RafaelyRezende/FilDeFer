@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 14:50:02 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 17:16:15 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 int	ft_keypress(int key, t_env *this)
 {
+	t_vec3	axis_x;
+	t_vec3	axis_y;
+	t_vec3	axis_z;
+
+	axis_x = ft_vec3_constructor(1.0f, 0.0f, 0.0f);
+	axis_y = ft_vec3_constructor(0.0f, 1.0f, 0.0f);
+	axis_z = ft_vec3_constructor(0.0f, 0.0f, 1.0f);
     printf("Keycode: %d\n", key);
 	fflush(stdout);
 	if (key == 65307)
@@ -29,26 +36,26 @@ int	ft_keypress(int key, t_env *this)
 	else if (key == 119)
 	{
 		this->trans_y -= TRANS_STEP_Y;
-		ft_rotate_map(this, 0.0f);
+		ft_rotate_map(this, axis_z, 0.0f);
 	}
 	else if (key == 115)
 	{
 		this->trans_y += TRANS_STEP_Y;
-		ft_rotate_map(this, 0.0f);
+		ft_rotate_map(this, axis_z, 0.0f);
 	}
 	else if (key == 97)
 	{
 		this->trans_x -= TRANS_STEP_X;
-		ft_rotate_map(this, 0.0f);
+		ft_rotate_map(this, axis_z, 0.0f);
 	}
 	else if (key == 100)
 	{
 		this->trans_x += TRANS_STEP_X;
-		ft_rotate_map(this, 0.0f);
+		ft_rotate_map(this, axis_z, 0.0f);
 	}
 	else if (key == 113)
-		ft_rotate_map(this, ANGLE_STEP);
+		ft_rotate_map(this, axis_z, ANGLE_STEP);
 	else if (key == 101)
-		ft_rotate_map(this, -ANGLE_STEP);
+		ft_rotate_map(this, axis_z, -ANGLE_STEP);
 	return (0);
 }

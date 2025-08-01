@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 15:17:27 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 18:15:27 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,16 @@ typedef struct	s_window
 	int	endian;
 }	t_window;
 
+typedef	struct	s_limits
+{
+	float	x_min;
+	float	x_max;
+	float	y_min;
+	float	y_max;
+	float	z_min;
+	float	z_max;
+}	t_limits;
+
 typedef struct	s_env
 {
 	t_map		*map;
@@ -93,7 +103,9 @@ typedef struct	s_env
 	t_quat		*q_axis;
 	void		*mlx;
 	void		*mlx_win;
+	t_limits	limits;
 	float		map_scaler;
+	float		z_scaler;
 	float		max_dim;
 	float		trans_x;
 	float		trans_y;
@@ -110,12 +122,12 @@ t_vec3	ft_vec3_add(t_vec3, t_vec3);
 t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
 //-------------------------------MAP FUNCTIONS-------------------------
-//void	ft_iso(t_map**, float);
-int	ft_sort_map(t_map*);
-int	init_map(const char*, t_map**);
-float	ft_vec3_mult(t_vec3, t_vec3);
-void	ft_apply_rotation(t_env*, float);
-void	ft_rotate_map(t_env*, float);
+int		ft_sort_map(t_map*);
+int		init_map(const char*, t_map**);
+float		ft_vec3_mult(t_vec3, t_vec3);
+void		ft_apply_rotation(t_env*);
+void		ft_rotate_map(t_env*, t_vec3, float);
+t_limits	ft_set_limits(t_map*);
 //-------------------------------SCREEN FUNCTIONS-----------------------
 void	ft_put_pixel(t_window *, float, float, float);
 void	ft_swap(float*, float*);
