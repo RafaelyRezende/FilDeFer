@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 17:16:15 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 19:35:43 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	ft_keypress(int key, t_env *this)
 {
-	t_vec3	axis_x;
-	t_vec3	axis_y;
+//	t_vec3	axis_x;
+//	t_vec3	axis_y;
 	t_vec3	axis_z;
 
-	axis_x = ft_vec3_constructor(1.0f, 0.0f, 0.0f);
-	axis_y = ft_vec3_constructor(0.0f, 1.0f, 0.0f);
+//	axis_x = ft_vec3_constructor(1.0f, 0.0f, 0.0f);
+//	axis_y = ft_vec3_constructor(0.0f, 1.0f, 0.0f);
 	axis_z = ft_vec3_constructor(0.0f, 0.0f, 1.0f);
     printf("Keycode: %d\n", key);
 	fflush(stdout);

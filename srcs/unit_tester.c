@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 18:12:22 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 20:49:47 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,8 @@ int	main(int argc, char **argv)
 	this.window.addr = mlx_get_data_addr(this.window.img, &this.window.bits_per_pixel, &this.window.line_length, &this.window.endian);
 	if (init_map(argv[1], &this.map))
 		return (mlx_destroy_window(this.mlx, this.mlx_win));
-	this.q_axis = (t_quat *)calloc(1, sizeof(t_quat));
-	if (!this.q_axis)
-	{
-		ft_clean_map(this.map);
-		return (-1);
-	}
-	if (this.map->rows >= this.map->cols)
-		this.max_dim = this.map->rows;
-	else
-		this.max_dim = this.map->cols;
-	this.trans_x = 0.0f;
-	this.trans_y = 0.0f;
+	ft_get_center(&this);
 	this.map_scaler = (SCREEN_W * 0.7f) / (this.max_dim * 2.0f);
-	*this.q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
-	ft_set_limits(this.map);
 	ft_apply_rotation(&this);
 	ft_sort_map(this.map);
 	ft_connect(&this.window, this.map);

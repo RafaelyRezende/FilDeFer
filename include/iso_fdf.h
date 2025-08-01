@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 18:15:27 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:10:15 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define SCREEN_W 1920
 # define SCREEN_X (1920/ 2)
 # define SCREEN_Y (1080/ 2) 
-//# define M_PI 3.14159265358979323846f
+# define M_PI 3.14159265358979323846f
 # define ISO_X 0.86602540378f
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
@@ -98,14 +98,14 @@ typedef	struct	s_limits
 
 typedef struct	s_env
 {
-	t_map		*map;
-	t_window	window;
-	t_quat		*q_axis;
 	void		*mlx;
 	void		*mlx_win;
-	t_limits	limits;
+	t_window	window;
+	t_map		*map;
+	t_quat		*q_axis;
+	t_limits	*limits;
+	t_vec3		grid_center;
 	float		map_scaler;
-	float		z_scaler;
 	float		max_dim;
 	float		trans_x;
 	float		trans_y;
@@ -119,6 +119,7 @@ t_quat	ft_quat_from_angle(t_vec3, float);
 t_vec3	ft_vec3_constructor(float, float, float);
 t_vec3	ft_vec3_norm(t_vec3);
 t_vec3	ft_vec3_add(t_vec3, t_vec3);
+t_vec3	ft_vec3_sub(t_vec3, t_vec3);
 t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
 //-------------------------------MAP FUNCTIONS-------------------------
@@ -127,7 +128,9 @@ int		init_map(const char*, t_map**);
 float		ft_vec3_mult(t_vec3, t_vec3);
 void		ft_apply_rotation(t_env*);
 void		ft_rotate_map(t_env*, t_vec3, float);
-t_limits	ft_set_limits(t_map*);
+void		ft_set_limits(t_env*);
+void		ft_iso(t_env *, t_vec3, unsigned int);
+void		ft_get_center(t_env *);
 //-------------------------------SCREEN FUNCTIONS-----------------------
 void	ft_put_pixel(t_window *, float, float, float);
 void	ft_swap(float*, float*);
