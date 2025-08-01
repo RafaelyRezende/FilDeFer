@@ -46,10 +46,10 @@ $(TRANS_TEST): $(LIBFT) $(PARSER_SRCS)
 	$(CC) $(TRANS_SRCS) $(LIBFT) $(CFLAGS) -o $@
 
 $(UNIT_TEST): $(LIBFT) $(UNIT_SRCS)
-	$(CC) $(UNIT_SRCS) $(LIBFT) -std=c11 $(CFLAGS) -o $@
+	$(CC) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
 
 $(NAME): $(LIBFT) $(MAIN_SRC)
-	$(CC) $(MAIN_SRC) $(LIBFT) -std=c11 $(CFLAGS) -o $(NAME)
+	$(CC) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
 
 srcs/%.o: srcs/%.c
 	$(CC) -g $(CFLAGS) -o $@ -c $<
