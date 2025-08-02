@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 18:16:27 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 19:35:02 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@
 # define ANGLE_STEP M_PI * 0.01f
 # define TRANS_STEP_X 1.0f
 # define TRANS_STEP_Y 0.5f
-# define MAX_ZOOM 0.05f
-# define MIN_ZOOM 1.0f
+# define MAX_ZOOM 5.0f
+# define MIN_ZOOM 0.2f
+# define ZOOM_STEP 0.2f
 
 //-------------------------------LINE CONSTANTS-------------------
 typedef struct	s_line
@@ -109,6 +110,8 @@ typedef struct	s_env
 	t_vec3		grid_center;
 	float		map_scaler;
 	float		max_dim;
+	float		zoom_scaler;
+	float		base_scaler;
 	float		offset_x;
 	float		offset_y;
 	float		trans_x;

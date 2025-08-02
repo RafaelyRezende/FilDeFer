@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 18:19:00 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 19:34:02 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,14 @@ void	ft_set_limits(t_env *env)
 			env->limits.z_max = env->map->grid[i].z_ori;
 		i++;
 	}
+	env->max_dim = fmaxf(env->limits.x_max - env->limits.x_min, env->limits.y_max - env->limits.y_min);
+	env->base_scaler = (SCREEN_W * 0.7f) / (env->max_dim * 2.0f);
 }
 
 static
 void	ft_screen_offset(t_env *env)
 {
+	env->map_scaler = env->base_scaler * env->zoom_scaler;
 	env->offset_x = SCREEN_X - (env->max_dim * ISO_X * env->map_scaler);
 	env->offset_y = SCREEN_Y - (env->max_dim * ISO_Y * env->map_scaler);
 }
@@ -175,8 +178,8 @@ void	ft_get_center(t_env *env)
 	env->offset_x = 0.0f;
 	env->offset_y = 0.0f;
 	env->angle = 0.0f;
-	env->map_scaler = 1.0f;
-	env->max_dim = 0.0f;
+	env->zoom_scaler = 1.0f;
+	env->base_scaler = 1.0f;
 	env->q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
 	ft_set_limits(env);
 	ft_screen_offset(env);
@@ -191,6 +194,7 @@ void	ft_iso(t_env *env, t_vec3 rotated, unsigned int i)
 	float	iso_x;
 	float	iso_y;
 
+	ft_screen_offset(env);
 	iso_x = (rotated.x - rotated.y) * ISO_X;
 	iso_y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
 	env->map->grid[i].x = (iso_x + env->trans_x) * env->map_scaler + env->offset_x;
@@ -205,8 +209,6 @@ void	ft_apply_rotation(t_env *env)
 	t_vec3		translated;
 	t_vec3		rotated;
 
-	env->max_dim = fmaxf(env->limits.x_max - env->limits.x_min, env->limits.y_max - env->limits.y_min);
-	env->map_scaler = (SCREEN_W * 0.7f) / (env->max_dim * 2.0f);
 	i = 0;
 	while (i < env->map->size)
 	{

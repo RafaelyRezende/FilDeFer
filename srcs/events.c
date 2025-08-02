@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 18:17:38 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 19:35:05 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 
 int	ft_keypress(int key, t_env *this)
 {
-//	t_vec3	axis_x;
-//	t_vec3	axis_y;
-	t_vec3	axis_z;
-
-//	axis_x = ft_vec3_constructor(1.0f, 0.0f, 0.0f);
-//	axis_y = ft_vec3_constructor(0.0f, 1.0f, 0.0f);
-	axis_z = ft_vec3_constructor(0.0f, 0.0f, 1.0f);
     printf("Keycode: %d\n", key);
 	fflush(stdout);
 	if (key == 65307)
@@ -44,7 +37,9 @@ int	ft_keypress(int key, t_env *this)
 		this->angle += ANGLE_STEP;
 	else if (key == 101)
 		this->angle -= ANGLE_STEP;
-	else if (key == 118)
-		this->map_scaler += ANGLE_STEP;
+	else if (key == 109 && this->zoom_scaler < MAX_ZOOM)
+		this->zoom_scaler += ZOOM_STEP;
+	else if (key == 110 && this->zoom_scaler > MIN_ZOOM)
+		this->zoom_scaler -= ZOOM_STEP;
 	return (0);
 }
