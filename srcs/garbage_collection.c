@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:06:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 21:59:21 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 13:57:29 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ int	ft_clean_exit(t_env *env)
 {
 	if (env->map)
 		ft_clean_map(env->map);
-	if (env->q_axis)
-		free(env->q_axis);
-	if (env->limits)
-		free(env->limits);
 	if (env->window.img)
 		mlx_destroy_image(env->mlx, env->window.img);
 	if (env->mlx_win)

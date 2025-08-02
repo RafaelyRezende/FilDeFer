@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 22:10:15 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:16:27 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define SCREEN_W 1920
 # define SCREEN_X (1920/ 2)
 # define SCREEN_Y (1080/ 2) 
-# define M_PI 3.14159265358979323846f
+//# define M_PI 3.14159265358979323846f
 # define ISO_X 0.86602540378f
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
@@ -33,6 +33,8 @@
 # define ANGLE_STEP M_PI * 0.01f
 # define TRANS_STEP_X 1.0f
 # define TRANS_STEP_Y 0.5f
+# define MAX_ZOOM 0.05f
+# define MIN_ZOOM 1.0f
 
 //-------------------------------LINE CONSTANTS-------------------
 typedef struct	s_line
@@ -102,13 +104,16 @@ typedef struct	s_env
 	void		*mlx_win;
 	t_window	window;
 	t_map		*map;
-	t_quat		*q_axis;
-	t_limits	*limits;
+	t_quat		q_axis;
+	t_limits	limits;
 	t_vec3		grid_center;
 	float		map_scaler;
 	float		max_dim;
+	float		offset_x;
+	float		offset_y;
 	float		trans_x;
 	float		trans_y;
+	float		angle;
 }	t_env;
 //-------------------------------QUATERNIONS FUNCTIONS--------------
 t_quat	ft_quat_constructor(float, float, float, float);
@@ -123,14 +128,15 @@ t_vec3	ft_vec3_sub(t_vec3, t_vec3);
 t_vec3	ft_vec3_scale(t_vec3, float);
 t_vec3	ft_rotate_vector(t_quat, t_vec3);
 //-------------------------------MAP FUNCTIONS-------------------------
-int		ft_sort_map(t_map*);
-int		init_map(const char*, t_map**);
-float		ft_vec3_mult(t_vec3, t_vec3);
-void		ft_apply_rotation(t_env*);
-void		ft_rotate_map(t_env*, t_vec3, float);
-void		ft_set_limits(t_env*);
-void		ft_iso(t_env *, t_vec3, unsigned int);
-void		ft_get_center(t_env *);
+int	ft_sort_map(t_map*);
+int	init_map(const char*, t_map**);
+float	ft_vec3_mult(t_vec3, t_vec3);
+void	ft_apply_rotation(t_env*);
+void	ft_rotate_map(t_env*);
+void	ft_set_limits(t_env*);
+void	ft_iso(t_env *, t_vec3, unsigned int);
+void	ft_get_center(t_env *);
+int	ft_display_img(t_env *);
 //-------------------------------SCREEN FUNCTIONS-----------------------
 void	ft_put_pixel(t_window *, float, float, float);
 void	ft_swap(float*, float*);

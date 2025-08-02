@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 19:35:43 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:17:38 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	ft_keypress(int key, t_env *this)
 	fflush(stdout);
 	if (key == 65307)
 	{
-		free(this->q_axis);
 		ft_clean_map(this->map);
 		mlx_destroy_image(this->mlx, this->window.img);
 		mlx_destroy_window(this->mlx, this->mlx_win);
@@ -34,28 +33,18 @@ int	ft_keypress(int key, t_env *this)
 		exit (0);
 	}
 	else if (key == 119)
-	{
 		this->trans_y -= TRANS_STEP_Y;
-		ft_rotate_map(this, axis_z, 0.0f);
-	}
 	else if (key == 115)
-	{
 		this->trans_y += TRANS_STEP_Y;
-		ft_rotate_map(this, axis_z, 0.0f);
-	}
 	else if (key == 97)
-	{
 		this->trans_x -= TRANS_STEP_X;
-		ft_rotate_map(this, axis_z, 0.0f);
-	}
 	else if (key == 100)
-	{
 		this->trans_x += TRANS_STEP_X;
-		ft_rotate_map(this, axis_z, 0.0f);
-	}
 	else if (key == 113)
-		ft_rotate_map(this, axis_z, ANGLE_STEP);
+		this->angle += ANGLE_STEP;
 	else if (key == 101)
-		ft_rotate_map(this, axis_z, -ANGLE_STEP);
+		this->angle -= ANGLE_STEP;
+	else if (key == 118)
+		this->map_scaler += ANGLE_STEP;
 	return (0);
 }

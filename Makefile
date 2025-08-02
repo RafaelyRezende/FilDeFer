@@ -1,8 +1,10 @@
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz -std=c11
+CFLAGS = -Wall -Werror -Wextra -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz
 
-CDB = -g -pg -O3
+CDB = -g -pg
+
+OPTFLAGS = -O3 -flto -fstrict-aliasing -ffast-math ##-march=native -funroll-loops
 
 ## FDF
 
@@ -46,10 +48,10 @@ $(TRANS_TEST): $(LIBFT) $(PARSER_SRCS)
 	$(CC) $(TRANS_SRCS) $(LIBFT) $(CFLAGS) -o $@
 
 $(UNIT_TEST): $(LIBFT) $(UNIT_SRCS)
-	$(CC) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
+	$(CC) $(OPTFLAGS) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
 
 $(NAME): $(LIBFT) $(MAIN_SRC)
-	$(CC) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
+	$(CC) $(OPTFLAGS) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
 
 srcs/%.o: srcs/%.c
 	$(CC) -g $(CFLAGS) -o $@ -c $<
@@ -59,6 +61,7 @@ $(LIBFT):
 
 clean:
 	@rm -rf $(PARSER_TEST)
+	@rm -rf $(NAME)
 	@rm -rf $(TRANS_TEST)
 	@rm -rf $(UNIT_TEST)
 	@rm -rf $(OBJS)

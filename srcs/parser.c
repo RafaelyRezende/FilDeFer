@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/07/28 14:38:50 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 15:58:03 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ int	ft_free_split(char **arr)
 	while (arr[i])
 		free(arr[i++]);
 	free(arr);
+	return (-1);
+}
+
+static
+int	ft_free_map(int fd, t_map **map)
+{
+	free((*map)->grid);
+	free(*map);
+	close(fd);
 	return (-1);
 }
 
@@ -78,15 +87,6 @@ int	ft_get_dim(const char *filename, int *row, int *col)
 	}
 	close(fd);
 	return (0);
-}
-
-static
-int	ft_free_map(int fd, t_map **map)
-{
-	free((*map)->grid);
-	free(*map);
-	close(fd);
-	return (-1);
 }
 
 static

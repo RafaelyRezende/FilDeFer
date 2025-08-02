@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 20:49:47 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:18:58 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,20 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		return (ft_error("number of arguments"));
 	this.mlx = mlx_init();
+	if (init_map(argv[1], &this.map))
+		return (ft_clean_exit(&this));
 	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
 	this.window.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
 	this.window.addr = mlx_get_data_addr(this.window.img, &this.window.bits_per_pixel, &this.window.line_length, &this.window.endian);
-	if (init_map(argv[1], &this.map))
-		return (mlx_destroy_window(this.mlx, this.mlx_win));
+	if (!this.mlx_win || !this.window.addr)
+		ft_clean_exit(&this);
 	ft_get_center(&this);
-	this.map_scaler = (SCREEN_W * 0.7f) / (this.max_dim * 2.0f);
-	ft_apply_rotation(&this);
-	ft_sort_map(this.map);
-	ft_connect(&this.window, this.map);
-	mlx_put_image_to_window(this.mlx, this.mlx_win, this.window.img, 0, 0);
+	mlx_loop_hook(this.mlx, ft_display_img, &this);
 	mlx_key_hook(this.mlx_win, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 2, 1L<<0, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 17, 1L<<17, ft_clean_exit, &this);
 	mlx_expose_hook(this.mlx_win, ft_expose, &this);
-	mlx_loop(this.mlx);
+	ft_display_img(&this);
 	return (0);
 }
 /*
