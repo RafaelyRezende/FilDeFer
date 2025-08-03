@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:22:09 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/03 18:40:05 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:58:02 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_height_to_color(t_env *env, float z)
 
 	if (isnan(env->limits.z_max) || isnan(env->limits.z_min) || isnan(z))
 		return (ft_rgb2int(255, 0, 0));
-	if (env->limits.z_max - env->limits.z_min < 0.001f)
+	if (env->limits.z_max - env->limits.z_min < 0.000001f)
 		return (ft_rgb2int(100, 200, 100));
 	normalized = (z - env->limits.z_min) / (env->limits.z_max - env->limits.z_min);
 	if (normalized < 0.2f)

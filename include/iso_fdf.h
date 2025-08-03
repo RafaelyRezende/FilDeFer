@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/03 18:40:07 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:27:19 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ typedef struct	s_line
 	float	two_dy;
 	float	param;
 	float	t;
-	int	total_steps;
-	int	current_steps;
+	float	total_steps;
+	float	current_steps;
 	int	color;
 }	t_line;
 
