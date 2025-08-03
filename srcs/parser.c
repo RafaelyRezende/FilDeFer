@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 15:58:03 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/03 16:50:40 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 			(*map)->grid[i].x_ori = (float) j;
 			(*map)->grid[i].z_ori = (float) (ft_atoi(split[j]));
 			(*map)->grid[i].y_ori = (float) (i / (*map)->cols);
-			(*map)->grid[i].color = COLOR;
 			i++;
 		}
 		(void)ft_free_split(split);
@@ -136,7 +135,7 @@ int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 	return (0);
 }
 
-int	init_map(const char *filename, t_map **map)//, t_mat4 *quat
+int	init_map(const char *filename, t_map **map)
 {
 	int		fd;
 	char	*line;

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 19:34:02 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:00:12 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void	ft_get_center(t_env *env)
 	env->base_scaler = 1.0f;
 	env->q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
 	ft_set_limits(env);
+	ft_set_color(env);
 	ft_screen_offset(env);
 	env->grid_center = ft_vec3_constructor(\
 			(env->limits.x_max + env->limits.x_min) * 0.5f,\
@@ -245,8 +246,6 @@ void	ft_rotate_map(t_env* env)
 int	ft_display_img(t_env *env)
 {
 	ft_rotate_map(env);
-	//ft_sort_map(env->map);
-	//ft_connect(&env->window, env->map);
 	mlx_loop(env->mlx);
 	return (0);
 }
