@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:11:37 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/01 14:58:11 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:14:27 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 static inline
 float	ft_get_depth(t_point p)
 {
-	return (p.x + p.y + p.z_ori);
+	return (p.x_ori + p.y_ori - p.z_ori);
 }
 
 static
 int	ft_partition(int *indices, t_point *grid, int low, int high)
 {
 	float	pivot;
-	int	i;
-	int	j;
-	int	tmp;
+	int		i;
+	int		j;
+	int		tmp;
 
 	pivot = ft_get_depth(grid[indices[(low + high) / 2]]);
 	i = low - 1;
@@ -32,10 +32,10 @@ int	ft_partition(int *indices, t_point *grid, int low, int high)
 	while (1)
 	{
 		i++;
-		while (ft_get_depth(grid[indices[i]]) > pivot)
+		while (ft_get_depth(grid[indices[i]]) < pivot)
 			i++;
 		j--;
-		while (ft_get_depth(grid[indices[j]]) < pivot)
+		while (ft_get_depth(grid[indices[j]]) > pivot)
 			j--;
 		if (i >= j)
 			return (j);

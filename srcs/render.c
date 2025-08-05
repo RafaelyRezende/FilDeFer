@@ -6,123 +6,79 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/03 20:27:57 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:05:37 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iso_fdf.h"
 
 static
-void	ft_draw_line(t_window *img, t_point p1, t_point p2, t_line l1)
+void	ft_octant_dy(t_line *line, t_point *p1)
 {
-	int	p0;
-	int	inc_x;
-	int	inc_y;
-
-	if (p1.x > p2.x)
-	{
-		ft_swap(&p1.x, &p2.x);
-		ft_swap(&p1.y, &p2.y);
-		ft_swap(&p1.color, &p2.color);
-	}
-	p0 = l1.param;
-	l1.current_steps = 0.0f;
-	l1.total_steps = l1.dx;
-	inc_y = 1;
-	if (p1.y > p2.y)
-		inc_y = -1;
-	inc_x = 1;
-	if (p1.x > p2.x)
-		inc_x = -1;
-	ft_put_pixel(img, p1.x, p1.y, p1.color);
-	while (p1.x < p2.x)
-	{
-		if (p0 < 0)
-			p0 += l1.two_dy;
-		else
-		{
-			p1.y += inc_y;
-			p0 += l1.two_dy - 2 * l1.dx;
-		}
-		p1.x += inc_x;
-		l1.current_steps++;
-		l1.t = l1.current_steps / l1.total_steps;
-		l1.color = ft_interpolate_color(p1.color, p2.color, l1.t);
-		ft_put_pixel(img, p1.x, p1.y, l1.color);
-	}
-}
-
-static
-void	ft_draw_line_too(t_window *img, t_point p1, t_point p2, t_line l1)
-{
-	int	p0;
-	int	inc_x;
-	int	inc_y;
-
-	if (p1.y > p2.y)
-	{
-		ft_swap(&p1.x, &p2.x);
-		ft_swap(&p1.y, &p2.y);
-		ft_swap(&p1.color, &p2.color);
-	}
-	p0 = 2 * l1.dx - l1.dy;
-	inc_y = 1;
-	if (p1.y > p2.y)
-		inc_y = -1;
-	inc_x = 1;
-	if (p1.x > p2.x)
-		inc_x = -1;
-	l1.current_steps = 0.0f;
-	l1.total_steps = l1.dy;
-	ft_put_pixel(img, p1.x, p1.y, p1.color);
-	while (p1.y < p2.y)
-	{
-		if (p0 < 0)
-			p0 += 2 * l1.dx;
-		else
-		{
-			p1.x += inc_x;
-			p0 += 2 * l1.dx - l1.two_dy;
-		}
-		p1.y += inc_y;
-		l1.current_steps++;
-		l1.t = l1.current_steps / l1.total_steps;
-		l1.color = ft_interpolate_color(p1.color, p2.color, l1.t);
-		ft_put_pixel(img, p1.x, p1.y, l1.color);
-	}
-}
-
-static
-void	ft_draw_edge(t_window *img, t_point p1, t_point p2)
-{
-	t_line	l1;
-
-	ft_init_line(&l1, p1, p2);
-	if (l1.dy > l1.dx)
-		ft_draw_line_too(img, p1, p2, l1);
+	if (line->param < 0)
+		line->param += line->two_dy;
 	else
-		ft_draw_line(img, p1, p2, l1);
+	{
+		p1->y += line->inc_y;
+		line->param += line->two_dy - 2 * line->dx;
+	}
+	p1->x += line->inc_x;
 }
 
 static
-int	idx(int i, int j, int cols)
+void	ft_octant_dx(t_line *line, t_point *p1)
 {
-	return (i * cols + j);
+	if (line->param < 0)
+		line->param += 2 * line->dx;
+	else
+	{
+		p1->x += line->inc_x;
+		line->param += 2 * line->dx - line->two_dy;
+	}
+	p1->y += line->inc_y;
+}
+
+static
+void	ft_line_step(t_line *line, t_point *p1, t_point *p2)
+{
+	line->t = line->current_steps / line->total_steps;
+	line->color = ft_interpolate_color(p1->color, p2->color, line->t);
+}
+
+static
+void	ft_draw_line(t_window *img, t_point p1, t_point p2)
+{
+	t_line	line;
+
+	ft_init_line(&line, p1, p2);
+	ft_put_pixel(img, p1.x, p1.y, p1.color);
+	if (line.dx > line.dy)
+	{
+		while (fabs(p1.x - p2.x) > 0.5f)
+		{
+			ft_line_step(&line, &p1, &p2);
+			ft_octant_dy(&line, &p1);
+			line.current_steps++;
+			ft_put_pixel(img, p1.x, p1.y, line.color);
+		}
+	}
+	else
+	{
+		while (fabs(p1.y - p2.y) > 0.5f)
+		{
+			ft_line_step(&line, &p1, &p2);
+			ft_octant_dx(&line, &p1);
+			line.current_steps++;
+			ft_put_pixel(img, p1.x, p1.y, line.color);
+		}
+	}
 }
 
 void	ft_connect(t_window *img, t_map *map)
 {
 	int	i;
 	int	j;
-	int	tmp;
 
-	i = 0;
-	while (i < (int)map->size)
-	{
-		tmp = map->indices[i];
-		ft_put_pixel(img, map->grid[tmp].x, map->grid[tmp].y, map->grid[tmp].color);
-		i++;
-	}
 	i = 0;
 	while (i < map->rows)
 	{
@@ -130,9 +86,11 @@ void	ft_connect(t_window *img, t_map *map)
 		while (j < map->cols)
 		{
 			if (j + 1 < map->cols)
-				ft_draw_edge(img, map->grid[idx(i , j, map->cols)], map->grid[idx(i, j + 1, map->cols)]);
+				ft_draw_line(img, map->grid[i * map->cols + j], \
+map->grid[i * map->cols + j + 1]);
 			if (i + 1 < map->rows)
-				ft_draw_edge(img, map->grid[idx(i, j, map->cols)], map->grid[idx(i + 1, j, map->cols)]);
+				ft_draw_line(img, map->grid[i * map->cols + j], \
+map->grid[(i + 1) * map->cols + j]);
 			j++;
 		}
 		i++;
