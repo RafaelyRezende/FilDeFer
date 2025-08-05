@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 12:18:17 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:25:54 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		return (ft_error("number of arguments"));
 	this.mlx = mlx_init();
-	if (init_map(argv[1], &this.map))
-		return (ft_clean_exit(&this));
 	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
 	this.window.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
 	this.window.addr = mlx_get_data_addr(this.window.img, \
 &this.window.bits_per_pixel, &this.window.line_length, &this.window.endian);
 	if (!this.mlx_win || !this.window.addr)
 		ft_clean_exit(&this);
+	if ((init_map(argv[1], &this.map)) < 0)
+		return (ft_clean_exit(&this));
 	ft_get_center(&this);
 	mlx_loop_hook(this.mlx, ft_display_img, &this);
 	mlx_key_hook(this.mlx_win, ft_keypress, &this);

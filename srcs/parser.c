@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 11:37:33 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:27:11 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ int	init_map(const char *filename, t_map **map)
 
 	line = NULL;
 	split = NULL;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (-1);
 	if (ft_mapalloc(filename, map))
 		return (-1);
-	fd = open(filename, O_RDONLY);
-	if (!fd)
-		return (ft_free_map(fd, map));
 	if (ft_parse_grid(fd, line, split, map))
 		return (ft_free_map(fd, map));
 	return (0);

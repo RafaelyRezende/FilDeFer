@@ -53,7 +53,7 @@ clean:
 
 fclean: clean
 	$(MAKE) -C libft fclean
-	@rm $(NAME)
+	@rm -rf $(NAME)
 re: fclean all
 
 .PHONY: clean fclean re all unit_test
