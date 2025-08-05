@@ -6,88 +6,11 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 15:58:03 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 11:37:33 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iso_fdf.h"
-
-static
-int	ft_free_line(char *line)
-{
-	free(line);
-	return (-1);
-}
-
-static
-int	ft_free_split(char **arr)
-{
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return (-1);
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-	return (-1);
-}
-
-static
-int	ft_free_map(int fd, t_map **map)
-{
-	free((*map)->grid);
-	free(*map);
-	close(fd);
-	return (-1);
-}
-
-static
-int	ft_count_col(char *line, int *col)
-{
-	char	**split;
-	int	count;
-
-	count = 0;
-	split = ft_split(line, ' ');
-	if (!split)
-		return (-1);
-	while (split[count])
-		count++;
-	if (*col < 0)
-		*col = count;
-	else if (count != *col)
-		return (ft_free_split(split));
-	(void)ft_free_split(split);
-	return (0);
-}
-
-static
-int	ft_get_dim(const char *filename, int *row, int *col)
-{
-	int	fd;
-	int	status;
-	char	*line;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (-1);
-	line = get_next_line(fd);
-	while (line)
-	{
-		status = ft_count_col(line, col);
-		free(line);
-		if (status < 0)
-		{
-			close(fd);
-			return (-1);
-		}
-		(*row)++;
-		line = get_next_line(fd);
-	}
-	close(fd);
-	return (0);
-}
 
 static
 int	ft_mapalloc(const char *filename, t_map **map)
@@ -117,7 +40,7 @@ int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			return(ft_free_line(line));
+			return (ft_free_line(line));
 		split = ft_split(line, ' ');
 		if (!split)
 			return (ft_free_line(line));
@@ -126,9 +49,8 @@ int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 		while (split[++j])
 		{
 			(*map)->grid[i].x_ori = (float) j;
-			(*map)->grid[i].z_ori = (float) (ft_atoi(split[j]));
-			(*map)->grid[i].y_ori = (float) (i / (*map)->cols);
-			(*map)->grid[i].color = COLOR;
+			(*map)->grid[i].z_ori = (float) ft_atoi(split[j]);
+			(*map)->grid[i].y_ori = (float) i / (*map)->cols;
 			i++;
 		}
 		(void)ft_free_split(split);
@@ -136,12 +58,12 @@ int	ft_parse_grid(int fd, char *line, char **split, t_map **map)
 	return (0);
 }
 
-int	init_map(const char *filename, t_map **map)//, t_mat4 *quat
+int	init_map(const char *filename, t_map **map)
 {
 	int		fd;
 	char	*line;
 	char	**split;
-	
+
 	line = NULL;
 	split = NULL;
 	if (ft_mapalloc(filename, map))

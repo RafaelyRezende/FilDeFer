@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/02 19:34:02 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:25:18 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,9 +179,12 @@ void	ft_get_center(t_env *env)
 	env->offset_y = 0.0f;
 	env->angle = 0.0f;
 	env->zoom_scaler = 1.0f;
+	env->z_scaler = 1.0f;
 	env->base_scaler = 1.0f;
+	env->is_iso = 1;
 	env->q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);
 	ft_set_limits(env);
+	ft_set_color(env);
 	ft_screen_offset(env);
 	env->grid_center = ft_vec3_constructor(\
 			(env->limits.x_max + env->limits.x_min) * 0.5f,\
@@ -195,8 +198,16 @@ void	ft_iso(t_env *env, t_vec3 rotated, unsigned int i)
 	float	iso_y;
 
 	ft_screen_offset(env);
-	iso_x = (rotated.x - rotated.y) * ISO_X;
-	iso_y = (rotated.x + rotated.y) * ISO_Y - rotated.z;
+	if (!env->is_iso)
+	{
+		iso_x = rotated.x - rotated.y;
+		iso_y = rotated.x + rotated.y;
+	}
+	else
+	{
+		iso_x = (rotated.x - rotated.y) * ISO_X;
+		iso_y = (rotated.x + rotated.y) * ISO_Y - (rotated.z * env->z_scaler);
+	}
 	env->map->grid[i].x = (iso_x + env->trans_x) * env->map_scaler + env->offset_x;
 	env->map->grid[i].y = (iso_y + env->trans_y) * env->map_scaler + env->offset_y;
 	i++;
@@ -236,6 +247,7 @@ void	ft_rotate_map(t_env* env)
 	new_rot = ft_quat_mult(rotation, env->q_axis);
 	env->q_axis = new_rot;
 	ft_apply_rotation(env);
+//	qsort(env->map->grid, env->map->size, sizeof(t_point), compare_lines);
 	ft_sort_map(env->map);
 	ft_clear_image(&env->window);
 	ft_connect(&env->window, env->map);
@@ -245,8 +257,6 @@ void	ft_rotate_map(t_env* env)
 int	ft_display_img(t_env *env)
 {
 	ft_rotate_map(env);
-	//ft_sort_map(env->map);
-	//ft_connect(&env->window, env->map);
 	mlx_loop(env->mlx);
 	return (0);
 }
