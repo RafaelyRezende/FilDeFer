@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 18:25:54 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:51:19 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@ int	ft_error(const char *msg)
 }
 
 static
-int	ft_expose(t_env *this)
+void	ft_init_env(t_env *this)
 {
-	mlx_put_image_to_window(this->mlx, this->mlx_win, this->window.img, 0, 0);
-	return (0);
+	this->mlx = NULL;
+	this->mlx_win = NULL;
+	this->map = NULL;
 }
 
 int	main(int argc, char **argv)
 {
 	t_env	this;
 
+	ft_init_env(&this);
 	if (argc != 2)
 		return (ft_error("number of arguments"));
 	this.mlx = mlx_init();
@@ -46,7 +48,7 @@ int	main(int argc, char **argv)
 	mlx_key_hook(this.mlx_win, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 2, 1L << 0, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 17, 1L << 17, ft_clean_exit, &this);
-	mlx_expose_hook(this.mlx_win, ft_expose, &this);
 	ft_display_img(&this);
+	mlx_loop(this.mlx);
 	return (0);
 }

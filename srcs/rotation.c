@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 16:28:57 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:54:41 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,5 @@ void	ft_rotate_map(t_env *env)
 int	ft_display_img(t_env *env)
 {
 	ft_rotate_map(env);
-	mlx_loop(env->mlx);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 17:22:35 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:02:39 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@
 # define HEIGHT_STEP 0.1f
 # define MAX_ZOOM 5.0f
 # define MIN_ZOOM 0.2f
-# define ZOOM_STEP 0.2f
+# define ZOOM_STEP_UP 0.9f
+# define ZOOM_STEP_DOWN 1.1f
 
 typedef struct s_line
 {
@@ -90,7 +91,7 @@ typedef struct s_map
 	unsigned int	size;
 	int				rows;
 	int				cols;
-	int				*indices;
+	int				*indexes;
 }	t_map;
 
 typedef struct s_window

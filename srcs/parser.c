@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:11 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:51:04 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	ft_mapalloc(const char *filename, t_map **map)
 	(*map)->rows = 0;
 	(*map)->cols = -1;
 	if ((ft_get_dim(filename, &((*map)->rows), &((*map)->cols)) < 0))
-		return (free(*map), -1);
+		return (-1);
 	(*map)->size = (*map)->rows * (*map)->cols;
 	(*map)->grid = ft_calloc(sizeof(t_point), (*map)->size);
 	if (!(*map)->grid)
-		return (free(*map), -1);
+		return (-1);
 	return (0);
 }
 
@@ -69,9 +69,9 @@ int	init_map(const char *filename, t_map **map)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		return (-1);
-	if (ft_mapalloc(filename, map))
+	if ((ft_mapalloc(filename, map)) < 0)
 		return (-1);
 	if (ft_parse_grid(fd, line, split, map))
-		return (ft_free_map(fd, map));
+			return (ft_free_map(fd, map));
 	return (0);
 }

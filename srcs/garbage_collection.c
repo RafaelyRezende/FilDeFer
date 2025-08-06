@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:06:59 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:13 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:36:32 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	ft_clean_map(t_map *map)
 {
 	if (map->grid)
 		free(map->grid);
-	if (map->indices)
-		free(map->indices);
+	if (map->indexes)
+		free(map->indexes);
 	free(map);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:11:37 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 12:14:27 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:03:42 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,64 +19,64 @@ float	ft_get_depth(t_point p)
 }
 
 static
-int	ft_partition(int *indices, t_point *grid, int low, int high)
+int	ft_partition(int *indexes, t_point *grid, int low, int high)
 {
 	float	pivot;
 	int		i;
 	int		j;
 	int		tmp;
 
-	pivot = ft_get_depth(grid[indices[(low + high) / 2]]);
+	pivot = ft_get_depth(grid[indexes[(low + high) / 2]]);
 	i = low - 1;
 	j = high + 1;
 	while (1)
 	{
 		i++;
-		while (ft_get_depth(grid[indices[i]]) < pivot)
+		while (ft_get_depth(grid[indexes[i]]) < pivot)
 			i++;
 		j--;
-		while (ft_get_depth(grid[indices[j]]) > pivot)
+		while (ft_get_depth(grid[indexes[j]]) > pivot)
 			j--;
 		if (i >= j)
 			return (j);
-		tmp = indices[i];
-		indices[i] = indices[j];
-		indices[j] = tmp;
+		tmp = indexes[i];
+		indexes[i] = indexes[j];
+		indexes[j] = tmp;
 	}
 }
 
 static
-void	ft_quicksort(int *indices, t_point *grid, int low, int high)
+void	ft_quicksort(int *indexes, t_point *grid, int low, int high)
 {
 	int	p;
 
 	if (low < high)
 	{
-		p = ft_partition(indices, grid, low, high);
-		ft_quicksort(indices, grid, low, p);
-		ft_quicksort(indices, grid, p + 1, high);
+		p = ft_partition(indexes, grid, low, high);
+		ft_quicksort(indexes, grid, low, p);
+		ft_quicksort(indexes, grid, p + 1, high);
 	}
 }
 
 int	ft_sort_map(t_map *map)
 {
-	int				*indices;
+	int				*indexes;
 	unsigned int	i;
 
 	if (!map || !map->grid || map->size <= 1)
 		return (-1);
-	indices = (int *)ft_calloc(map->size, sizeof(int));
-	if (!indices)
+	indexes = (int *)ft_calloc(map->size, sizeof(int));
+	if (!indexes)
 		return (-1);
 	i = 0;
 	while (i < map->size)
 	{
-		indices[i] = i;
+		indexes[i] = i;
 		i++;
 	}
-	ft_quicksort(indices, map->grid, 0, map->size - 1);
-	if (map->indices)
-		free(map->indices);
-	map->indices = indices;
+	ft_quicksort(indexes, map->grid, 0, map->size - 1);
+	if (map->indexes)
+		free(map->indexes);
+	map->indexes = indexes;
 	return (0);
 }

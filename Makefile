@@ -2,7 +2,7 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz
 
-CDB = -g -pg
+CDB = -g #-pg
 
 OPTFLAGS = -O3 -flto -fstrict-aliasing -ffast-math ##-march=native -funroll-loops
 
@@ -32,10 +32,10 @@ all: $(NAME)
 test: $(PARSER_TEST)
 
 $(UNIT_TEST): $(LIBFT) $(MLX) $(UNIT_SRCS)
-	$(CC) $(OPTFLAGS) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
+	$(CC) $(CDB) $(OPTFLAGS) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
 
 $(NAME): $(LIBFT) $(MLX) $(MAIN_SRC)
-	$(CC) $(OPTFLAGS) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
+	$(CC) $(CDB) $(OPTFLAGS) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
 
 srcs/%.o: srcs/%.c
 	$(CC) -g $(CFLAGS) -o $@ -c $<
