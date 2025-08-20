@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 20:01:47 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/06 20:51:04 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/07 10:35:10 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,6 @@ int	init_map(const char *filename, t_map **map)
 	if ((ft_mapalloc(filename, map)) < 0)
 		return (-1);
 	if (ft_parse_grid(fd, line, split, map))
-			return (ft_free_map(fd, map));
+		return (ft_free_map(fd, map));
 	return (0);
 }
