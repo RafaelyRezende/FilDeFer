@@ -1,6 +1,9 @@
 # FIL DER FER
-
 <br>
+
+![42 Project](https://img.shields.io/badge/42_Project-FdF-00babc?style=for-the-badge)
+![Language](https://img.shields.io/badge/Language-C-blue?style=for-the-badge)
+![Bonus](https://img.shields.io/badge/Bonus-Complete-brightgreen?style=for-the-badge)
 
   <video src="https://github.com/user-attachments/assets/a5653a9f-510b-4e1e-80bb-c02e1d506edd" controls>
     Your browser does not support the video tag.
