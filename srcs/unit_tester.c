@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/19 17:05:36 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:27:43 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,26 @@ void	ft_init_env(t_env *this)
 	this->map = NULL;
 }
 
+static
+void	ft_checker_path(char **argv)
+{
+	char	*str;
+	
+	if (!ft_strchr(argv[1], '.'))
+		exit(0);
+	str = ft_strchr(argv[1], '.');
+	if (ft_strcmp(++str, "fdf"))
+		exit(0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_env	this;
 
-	ft_init_env(&this);
 	if (argc != 2)
 		return (ft_error("number of arguments"));
+	ft_checker_path(argv);
+	ft_init_env(&this);
 	this.mlx = mlx_init();
 	this.mlx_win = mlx_new_window(this.mlx, SCREEN_W, SCREEN_H, NAME);
 	this.window.img = mlx_new_image(this.mlx, SCREEN_W, SCREEN_H);
