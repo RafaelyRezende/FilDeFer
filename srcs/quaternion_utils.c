@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 16:36:53 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:55:24 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	ft_get_center(t_env *env)
 	env->offset_y = 0.0f;
 	env->angle = 0.0f;
 	env->zoom_scaler = 1.0f;
-	env->z_scaler = 1.0f;
+	env->z_scaler = 0.6f;
 	env->base_scaler = 1.0f;
 	env->is_iso = 1;
 	env->q_axis = ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f);

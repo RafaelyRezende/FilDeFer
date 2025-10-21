@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 10:29:43 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:58:41 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	ft_button_scale(int key, t_env *this)
 	if (key == 101)
 		this->angle -= ANGLE_STEP;
 	if (key == 109 && this->zoom_scaler < MAX_ZOOM)
-		this->zoom_scaler += ZOOM_STEP;
+		this->zoom_scaler *= ZOOM_STEP_DOWN;
 	if (key == 110 && this->zoom_scaler > MIN_ZOOM)
-		this->zoom_scaler -= ZOOM_STEP;
+		this->zoom_scaler *= ZOOM_STEP_UP;
 }
 
 static

@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/05 15:51:17 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:27:05 by rluis-ya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,18 @@ t_vec3	ft_vec3_norm(t_vec3 u)
 	return (ft_vec3_scale(u, 1.0f / squared));
 }
 
-t_vec3	ft_vec3_add(t_vec3 u, t_vec3 v)
+inline t_vec3	ft_vec3_add(t_vec3 u, t_vec3 v)
 {
 	return (ft_vec3_constructor((u.x + v.x), (u.y + v.y), (u.z + v.z)));
 }
 
-t_vec3	ft_vec3_sub(t_vec3 u, t_vec3 v)
+inline t_vec3	ft_vec3_sub(t_vec3 u, t_vec3 v)
 {
 	return (ft_vec3_constructor((u.x - v.x), (u.y - v.y), (u.z - v.z)));
 }
 
-t_vec3	ft_vec3_scale(t_vec3 u, float scaler)
+inline t_vec3	ft_vec3_scale(t_vec3 u, float scaler)
 {
-	t_vec3	result;
-
-	result.x = u.x * scaler;
-	result.y = u.y * scaler;
-	result.z = u.z * scaler;
-	return (result);
+	return (ft_vec3_constructor((u.x * scaler), \
+(u.y * scaler), (u.z * scaler)));
 }
