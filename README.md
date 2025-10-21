@@ -2,7 +2,9 @@
 
 <br>
 
-[![Watch NOW](https://github.com/RafaelyRezende/FilDeFer/blob/main/.archieved/42fdf.png)](https://github.com/RafaelyRezende/FilDeFer/blob/main/.archieved/t2_3.mp4)
+  <video src="https://github.com/user-attachments/assets/a5653a9f-510b-4e1e-80bb-c02e1d506edd" controls>
+    Your browser does not support the video tag.
+  </video>
 
 <br>
 
