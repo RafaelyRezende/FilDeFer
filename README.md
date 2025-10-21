@@ -2,7 +2,7 @@
 
 <br>
 
-[![Watch the video](https://raw.githubusercontent.com/RafaelyRezende/FilDeFer/blob/main/.archieved/42fdf.png)](https://raw.githubusercontent.com/RafaelyRezende/FilDeFer/blob/main/.archieved/t2_3.mp4)
+[![Watch NOW](https://github.com/RafaelyRezende/FilDeFer/blob/main/.archieved/42fdf.png)](https://github.com/RafaelyRezende/FilDeFer/blob/main/.archieved/t2_3.mp4)
 
 <br>
 
