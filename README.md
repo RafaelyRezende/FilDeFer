@@ -130,6 +130,5 @@ This project was completed using only the functions authorized by the subject:
   * `gettimeofday`
   * All functions from the **Math Library** (`-lm`)
   * All functions from the **MiniLibX** library
-  * Any equivalent `ft_printf` YOU coded
 
 <!-- end list -->
