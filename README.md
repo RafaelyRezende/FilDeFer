@@ -114,6 +114,8 @@ Execute the program by passing a valid `.fdf` map file as an argument:
   </a>
 </div>
 
+*NOTE:* Custom map files generated using [this](https://github.com/jgigault/42MapGenerator) repository, authored by Jean-Michel Gigault.
+
 ## Authorized Functions
 
 This project was completed using only the functions authorized by the subject:
