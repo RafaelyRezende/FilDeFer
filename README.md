@@ -34,8 +34,6 @@ This project is about creating a **wireframe model representation of a 3D landsc
 - Toggle buttons;
 - Interactive mode with mouse;
 
-Here is the cleaned Markdown, with all embedded HTML tags (`<video>`, `<div>`, `<img>`) removed and replaced with standard Markdown, and all formatting issues corrected.
-
 ## Features
 
 ### Mandatory Part
