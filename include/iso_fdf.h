@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/20 14:32:32 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2026/10/10 00:37:30 by jps              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ t_vec3	ft_vec3_scale(t_vec3 u, float scaler);
 t_vec3	ft_rotate_vector(t_quat q, t_vec3 u);
 int		ft_sort_map(t_map *map);
 int		init_map(const char *filename, t_map **map);
-int		ft_display_img(t_env *env);
+int		ft_display_img(void *param);
 int		ft_count_cols(char *line, int *col);
 int		ft_get_dim(const char *filename, int *row, int *col);
 float	ft_vec3_mult(t_vec3, t_vec3);
@@ -165,10 +165,10 @@ void	ft_put_pixel(t_window *window, float width, float heigth, float color);
 void	ft_init_line(t_line *line, t_point p1, t_point p2);
 t_point	*ft_parser(char *line);
 void	ft_connect(t_window *img, t_map *map);
-int		ft_keypress(int key, t_env *this);
+int		ft_keypress(int key, void *param);
 void	ft_clean_map(t_map *map);
 void	ft_clear_image(t_window *window);
-int		ft_clean_exit(t_env *env);
+int		ft_clean_exit(void *param);
 int		ft_free_line(char *line);
 int		ft_free_split(char **arr);
 int		ft_free_map(int fd, t_map **map);

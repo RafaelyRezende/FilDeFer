@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/06 19:58:41 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2026/10/10 00:36:26 by jps              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,11 @@ void	ft_button_toggle(int key, t_env *this)
 		this->is_iso = 1;
 }
 
-int	ft_keypress(int key, t_env *this)
+int	ft_keypress(int key, void *param)
 {
+	t_env	*this;
+	
+	this = param;
 	if (key == 65307)
 		ft_clean_exit(this);
 	if (key == 119 || key == 115 || key == 97 || key == 100)

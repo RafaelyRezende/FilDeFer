@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 09:49:07 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/20 14:27:43 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2026/10/10 00:48:45 by jps              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	main(int argc, char **argv)
 		return (ft_clean_exit(&this));
 	ft_get_center(&this);
 	mlx_loop_hook(this.mlx, ft_display_img, &this);
-	mlx_key_hook(this.mlx_win, ft_keypress, &this);
+	//mlx_key_hook(this.mlx_win, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 2, 1L << 0, ft_keypress, &this);
 	mlx_hook(this.mlx_win, 17, 1L << 17, ft_clean_exit, &this);
 	ft_display_img(&this);
