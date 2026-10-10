@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FDF — SDL2/WebAssembly</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    /* Full-viewport canvas: Emscripten resizes the SDL window with it. */
+    canvas.emscripten {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      outline: none;
+    }
+    #status {
+      position: fixed;
+      left: 8px;
+      bottom: 8px;
+      color: #0f0;
+      font: 12px monospace;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" class="emscripten" tabindex="0"
+          oncontextmenu="event.preventDefault()"></canvas>
+  <div id="status">loading...</div>
+  <script>
+    var statusEl = document.getElementById('status');
+    var Module = {
+      canvas: document.getElementById('canvas'),
+      preRun: [],
+      postRun: [function () { statusEl.style.display = 'none'; }],
+      setStatus: function (text) {
+        if (text) statusEl.textContent = text;
+      },
+      printErr: function (text) { console.error(text); }
+    };
+    // Keep the SDL window matching the canvas (browser resize / HiDPI).
+    function fitCanvas() {
+      var c = Module.canvas;
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+    }
+    window.addEventListener('resize', fitCanvas);
+    fitCanvas();
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

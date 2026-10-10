@@ -36,7 +36,6 @@ int	ft_strlcat(char *dst, const char *src, unsigned int size)
 }
 /*
 #include <stdio.h>
-#include <bsd/string.h>
 int	main()
 {
 	char	dst[] = "aaaaaaaaaa";

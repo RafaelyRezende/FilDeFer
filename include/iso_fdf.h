@@ -1,20 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   iso_fdf.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 19:37:02 by rluis-ya          #+#    #+#             */
+/*   Updated: 2026/10/10 by jps (SDL2/WebAssembly port — minilibx removed)  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef ISO_FDF_H
 # define ISO_FDF_H
 
 # include "libft.h"
-# include "mlx.h"
+# include <SDL.h>
+# include <SDL_ttf.h>
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdint.h>
-# include <X11/keysym.h>
+# include <float.h>
 
 # define NAME "FDF"
-# define SCREEN_H 1080
-# define SCREEN_W 1920
-# define SCREEN_X 960
-# define SCREEN_Y 540
+# define DEFAULT_H 1080
+# define DEFAULT_W 1920
 # define ISO_X 0.86602540378f
 # define ISO_Y 0.5f
 # define ROT_SPEED 0.05f
@@ -103,13 +114,20 @@ typedef struct s_map
 	int				cols;
 }	t_map;
 
+/*
+** SDL2 port: replaces the minilibx image descriptor. `addr` is a
+** contiguous w*h Uint32 CPU framebuffer owned by us (no line_length /
+** bits_per_pixel / endian fields anymore); it is uploaded each frame to
+** the streaming ARGB8888 texture.
+*/
 typedef struct s_window
 {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
+	SDL_Window		*win;
+	SDL_Renderer	*renderer;
+	SDL_Texture		*texture;
+	unsigned int	*addr;
+	int				w;
+	int				h;
 }	t_window;
 
 typedef struct s_limits
@@ -123,29 +141,39 @@ typedef struct s_limits
 }	t_limits;
 
 /*
-** P-04 fix: needs_redraw dirty flag gates the loop-hook redraw.
+** P-04 fix: needs_redraw dirty flag gates the frame redraw.
+** SDL2 port: the minilibx display/window pointers are replaced by the
+** embedded t_window; `running`
+** drives the main loop; font/ui_tex hold the cached controls overlay;
+** map_files/map_count/map_index drive Tab map cycling and SDL_DROPFILE.
 */
 typedef struct s_env
 {
-	void		*mlx;
-	void		*mlx_win;
-	t_window	window;
-	t_map		*map;
-	t_quat		q_axis;
-	t_limits	limits;
-	t_vec3		grid_center;
-	float		map_scaler;
-	float		max_dim;
-	float		zoom_scaler;
-	float		base_scaler;
-	float		z_scaler;
-	float		offset_x;
-	float		offset_y;
-	float		trans_x;
-	float		trans_y;
-	float		angle;
-	int			is_iso;
-	int			needs_redraw;
+	t_window		window;
+	t_map			*map;
+	t_quat			q_axis;
+	t_limits		limits;
+	t_vec3			grid_center;
+	float			map_scaler;
+	float			max_dim;
+	float			zoom_scaler;
+	float			base_scaler;
+	float			z_scaler;
+	float			offset_x;
+	float			offset_y;
+	float			trans_x;
+	float			trans_y;
+	float			angle;
+	int				is_iso;
+	int				needs_redraw;
+	int				running;
+	TTF_Font		*font;
+	SDL_Texture		*ui_tex;
+	int				ui_tex_w;
+	int				ui_tex_h;
+	int				map_index;
+	char			**map_files;
+	int				map_count;
 }	t_env;
 
 t_quat	ft_quat_constructor(float w, float x, float y, float z);
@@ -160,7 +188,7 @@ t_vec3	ft_vec3_sub(t_vec3 u, t_vec3 v);
 t_vec3	ft_vec3_scale(t_vec3 u, float scaler);
 t_vec3	ft_rotate_vector(t_quat q, t_vec3 u);
 int		init_map(const char *filename, t_map **map);
-int		ft_display_img(void *param);
+int		ft_frame(void *param);
 int		ft_count_col(char *line, int *col);
 int		ft_get_dim(const char *filename, int *row, int *col);
 void	ft_apply_rotation(t_env *env);
@@ -179,12 +207,26 @@ void	ft_set_color(t_env *env);
 void	ft_put_pixel(t_window *window, int x, int y, int color);
 void	ft_init_line(t_line *line, int x0, int y0, int x1, int y1);
 void	ft_connect(t_window *img, t_map *map);
-int		ft_keypress(int key, void *param);
+int		ft_keypress(SDL_Keycode key, void *param);
 void	ft_clean_map(t_map *map);
 void	ft_clear_image(t_window *window);
 int		ft_clean_exit(void *param);
 int		ft_fail_exit(void *param);
+void	ft_shutdown(t_env *env);
 int		ft_free_line(char *line);
 int		ft_free_split(char **arr);
 int		ft_free_map(int fd, t_map **map);
+
+/* SDL2 platform layer (srcs/platform.c) */
+int		ft_platform_init(t_env *env, const char *title, int w, int h);
+void	ft_platform_events(t_env *env);
+void	ft_platform_present(t_env *env);
+void	ft_platform_resize(t_env *env, int w, int h);
+void	ft_platform_quit(t_env *env);
+int		ft_load_map_file(t_env *env, const char *path);
+void	ft_cycle_map(t_env *env);
+
+/* SDL2_ttf controls overlay (srcs/font.c), failures non-fatal */
+void	ft_ui_init(t_env *env);
+void	ft_ui_destroy(t_env *env);
 #endif

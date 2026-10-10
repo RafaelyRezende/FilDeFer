@@ -1,6 +1,16 @@
-#include "iso_fdf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rotation.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
+/*   Updated: 2026/10/10 by jps (SDL2 port: present via platform layer)    */
+/*                                                                            */
+/* ************************************************************************** */
 
-static void	ft_draw_ui(t_env *env);
+#include "iso_fdf.h"
 
 /*
 ** P-02 fix: ft_screen_offset is hoisted here — it depends only on
@@ -40,6 +50,9 @@ env->map->grid[i].z_ori);
 ** (ft_sort_order) and ft_connect consumes that order. Without it, the
 ** fixed row-major rasterization order painted far lines over near ones
 ** as soon as the model was rotated away from its initial orientation.
+** SDL2 port: the frame stays in the CPU framebuffer; ft_frame (main.c)
+** uploads and presents it via ft_platform_present. The controls overlay
+** is a cached SDL2_ttf texture drawn at present time (srcs/font.c).
 */
 void	ft_rotate_map(t_env *env)
 {
@@ -56,41 +69,4 @@ void	ft_rotate_map(t_env *env)
 	ft_sort_order(env->map);
 	ft_clear_image(&env->window);
 	ft_connect(&env->window, env->map);
-	mlx_put_image_to_window(env->mlx, env->mlx_win, env->window.img, 0, 0);
-}
-
-/*
-** P-04 fix: dirty-flag gating. The mlx loop hook fires continuously; the
-** full transform + clear + rasterize pipeline now runs only when input
-** (or startup) has raised needs_redraw. Idle CPU usage drops to ~zero.
-*/
-int	ft_display_img(void *param)
-{
-	t_env	*env;
-
-	env = (t_env *) param;
-	if (!env->needs_redraw)
-		return (0);
-	env->needs_redraw = 0;
-	ft_rotate_map(env);
-	ft_draw_ui(env);
-	return (0);
-}
-
-static
-void	ft_draw_ui(t_env *env)
-{
-	int	x;
-	int	y;
-
-	x = 30;
-	y = 30;
-	mlx_string_put(env->mlx, env->mlx_win, x, y, 0X00FF00FF, "Fil der Fer");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 10, 0X00FF00FF, "--------------------------------");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 50, 0X00FF00FF, "BUTTONS");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 90, 0X00FF00FF, "A/W/S/D move image");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 130, 0X00FF00FF, "Q/E rotate image");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 170, 0X00FF00FF, "M/N zoom in & zoom out");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 210, 0X00FF00FF, "1/2 change perspective");
-	mlx_string_put(env->mlx, env->mlx_win, x, y + 250, 0X00FF00FF, "-/+ change height");
 }

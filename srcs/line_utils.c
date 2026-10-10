@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   line_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 12:45:19 by rluis-ya          #+#    #+#             */
+/*   Updated: 2026/10/10 by jps (review fixes: L-01, L-10, P-05)             */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "iso_fdf.h"
 
 /*
@@ -29,19 +41,16 @@ void	ft_init_line(t_line *line, int x0, int y0, int x1, int y1)
 }
 
 /*
-** L-01 fix: bounds test is now >= on both axes. Valid pixel coordinates
-** are 0..SCREEN_W-1 / 0..SCREEN_H-1; the old `>` test admitted exactly
-** one out-of-range coordinate per axis, writing past the image buffer on
-** the final row (heap corruption).
+** L-01 fix: bounds test is >= on both axes. Valid pixel coordinates are
+** 0..w-1 / 0..h-1 of the runtime framebuffer size (adaptive resolution:
+** the old compile-time SCREEN_W/SCREEN_H test is gone).
 ** L-10 fix: coordinates and color are int; no float->int conversions.
+** SDL2 port: addr is a contiguous Uint32 buffer; the alpha byte is OR-ed
+** to 0xFF so the packed pixel lands as opaque ARGB8888.
 */
 void	ft_put_pixel(t_window *window, int x, int y, int color)
 {
-	char	*dst;
-
-	if (x < 0 || y < 0 || x >= SCREEN_W || y >= SCREEN_H)
+	if (x < 0 || y < 0 || x >= window->w || y >= window->h)
 		return ;
-	dst = window->addr + \
-(y * window->line_length + x * (window->bits_per_pixel / 8));
-	*(unsigned int *)dst = (unsigned int)color;
+	window->addr[y * window->w + x] = (unsigned int)color | 0xFF000000u;
 }

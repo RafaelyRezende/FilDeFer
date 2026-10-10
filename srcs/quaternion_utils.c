@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quaternion_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 19:25:54 by rluis-ya          #+#    #+#             */
+/*   Updated: 2026/10/10 by jps (review fixes: L-06, L-10, P-02, V-01)     */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "iso_fdf.h"
 
 static
@@ -5,12 +17,12 @@ t_limits	ft_init_limits(void)
 {
 	t_limits	limits;
 
-	limits.x_min = SCREEN_W;
-	limits.x_max = -SCREEN_W;
-	limits.y_min = SCREEN_H;
-	limits.y_max = -SCREEN_H;
-	limits.z_min = SCREEN_W;
-	limits.z_max = -SCREEN_W;
+	limits.x_min = FLT_MAX;
+	limits.x_max = -FLT_MAX;
+	limits.y_min = FLT_MAX;
+	limits.y_max = -FLT_MAX;
+	limits.z_min = FLT_MAX;
+	limits.z_max = -FLT_MAX;
 	return (limits);
 }
 
@@ -45,14 +57,21 @@ void	ft_set_limits(t_env *env)
 env->limits.y_max - env->limits.y_min);
 	if (env->max_dim < MIN_DIM_EPSILON)
 		env->max_dim = 1.0f;
-	env->base_scaler = (SCREEN_W * 0.7f) / (env->max_dim * 2.0f);
+	env->base_scaler = (env->window.w * 0.7f) / (env->max_dim * 2.0f);
 }
 
+/*
+** SDL2 adaptive resolution: the center offsets are derived from the
+** runtime framebuffer size (window.w/h) each frame instead of the old
+** compile-time SCREEN_X/SCREEN_Y constants.
+*/
 void	ft_screen_offset(t_env *env)
 {
 	env->map_scaler = env->base_scaler * env->zoom_scaler;
-	env->offset_x = SCREEN_X - (env->max_dim * ISO_X * env->map_scaler);
-	env->offset_y = SCREEN_Y - (env->max_dim * ISO_Y * env->map_scaler);
+	env->offset_x = (env->window.w * 0.5f) - \
+(env->max_dim * ISO_X * env->map_scaler);
+	env->offset_y = (env->window.h * 0.5f) - \
+(env->max_dim * ISO_Y * env->map_scaler);
 }
 
 void	ft_get_center(t_env *env)

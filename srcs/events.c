@@ -1,15 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   events.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
+/*   Updated: 2026/10/10 by jps (SDL2 port: SDL_Keycode instead of X11)    */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "iso_fdf.h"
 
 static
-void	ft_button_translate(int key, t_env *this)
+void	ft_button_translate(SDL_Keycode key, t_env *this)
 {
-	if (key == XK_w)
+	if (key == SDLK_w)
 		this->trans_y -= TRANS_STEP_Y;
-	if (key == XK_s)
+	if (key == SDLK_s)
 		this->trans_y += TRANS_STEP_Y;
-	if (key == XK_a)
+	if (key == SDLK_a)
 		this->trans_x -= TRANS_STEP_X;
-	if (key == XK_d)
+	if (key == SDLK_d)
 		this->trans_x += TRANS_STEP_X;
 }
 
@@ -19,48 +31,52 @@ void	ft_button_translate(int key, t_env *this)
 ** slipped past the gate).
 */
 static
-void	ft_button_scale(int key, t_env *this)
+void	ft_button_scale(SDL_Keycode key, t_env *this)
 {
-	if (key == XK_q)
+	if (key == SDLK_q)
 		this->angle += ANGLE_STEP;
-	if (key == XK_e)
+	if (key == SDLK_e)
 		this->angle -= ANGLE_STEP;
-	if (key == XK_m)
+	if (key == SDLK_m)
 		this->zoom_scaler = fminf(this->zoom_scaler * ZOOM_IN_FACTOR, MAX_ZOOM);
-	if (key == XK_n)
+	if (key == SDLK_n)
 		this->zoom_scaler = fmaxf(this->zoom_scaler * ZOOM_OUT_FACTOR, MIN_ZOOM);
 }
 
 static
-void	ft_button_toggle(int key, t_env *this)
+void	ft_button_toggle(SDL_Keycode key, t_env *this)
 {
-	if (key == XK_equal)
+	if (key == SDLK_EQUALS)
 		this->z_scaler += HEIGHT_STEP;
-	else if (key == XK_minus)
+	else if (key == SDLK_MINUS)
 		this->z_scaler -= HEIGHT_STEP;
-	else if (key == XK_2)
+	else if (key == SDLK_2)
 		this->is_iso = 0;
-	else if (key == XK_1)
+	else if (key == SDLK_1)
 		this->is_iso = 1;
 }
 
 /*
-** L-11 fix: raw numeric keycodes replaced by X11 keysym macros.
-** P-04 fix: any state-mutating key raises needs_redraw so the loop hook
+** SDL2 port: SDL_Keycode replaces the old X11 keysyms; control parity is
+** unchanged (WASD translate, Q/E rotate, M/N clamped zoom, 1/2 projection,
+** -/= height, ESC quit). Tab (map cycling) and SDL_DROPFILE are handled in
+** ft_platform_events (srcs/platform.c).
+** P-04 fix: any state-mutating key raises needs_redraw so the frame loop
 ** redraws exactly once per change instead of every tick.
 */
-int	ft_keypress(int key, void *param)
+int	ft_keypress(SDL_Keycode key, void *param)
 {
 	t_env	*this;
 
 	this = param;
-	if (key == XK_Escape)
+	if (key == SDLK_ESCAPE)
 		ft_clean_exit(this);
-	if (key == XK_w || key == XK_s || key == XK_a || key == XK_d)
+	if (key == SDLK_w || key == SDLK_s || key == SDLK_a || key == SDLK_d)
 		ft_button_translate(key, this);
-	else if (key == XK_q || key == XK_e || key == XK_m || key == XK_n)
+	else if (key == SDLK_q || key == SDLK_e || key == SDLK_m || key == SDLK_n)
 		ft_button_scale(key, this);
-	else if (key == XK_equal || key == XK_minus || key == XK_2 || key == XK_1)
+	else if (key == SDLK_EQUALS || key == SDLK_MINUS || \
+key == SDLK_2 || key == SDLK_1)
 		ft_button_toggle(key, this);
 	else
 		return (0);
