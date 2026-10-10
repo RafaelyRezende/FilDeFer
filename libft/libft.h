@@ -68,7 +68,7 @@ void	*ft_memchr(const void *s, int c, unsigned int n);
 void	*ft_memccpy(void *dest, const void *src, int c, unsigned int n);
 void	ft_bzero(void *s, unsigned int n);
 void	*ft_memset(void *s, int c, unsigned int n);
-void	*ft_calloc(unsigned int nmemb, unsigned int size);
+void	*ft_calloc(size_t nmemb, size_t size);
 //--------------------------LIST MANIPULATION-----------------------------
 t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);

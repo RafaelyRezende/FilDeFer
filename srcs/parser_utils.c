@@ -31,10 +31,24 @@ int	ft_free_split(char **arr)
 	return (-1);
 }
 
+/*
+** Fix: after freeing, reset *map to NULL so callers never touch a dangling
+** pointer. Previously, when ft_parse_grid failed, init_map returned -1 with
+** *map still pointing at freed memory; main then called ft_fail_exit ->
+** ft_cleanup -> ft_clean_map, which read map->grid from the freed block
+** (invalid read) and freed both grid and map a second time (double free).
+*/
 int	ft_free_map(int fd, t_map **map)
 {
-	free((*map)->grid);
-	free(*map);
+	if (*map)
+	{
+		if ((*map)->grid)
+			free((*map)->grid);
+		if ((*map)->order)
+			free((*map)->order);
+		free(*map);
+		*map = NULL;
+	}
 	close(fd);
 	return (-1);
 }

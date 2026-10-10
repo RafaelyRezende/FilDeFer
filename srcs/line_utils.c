@@ -6,46 +6,54 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:45:19 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/06 20:46:00 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2026/10/10 by jps (review fixes: L-01, L-10, P-05)             */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iso_fdf.h"
 
-void	ft_init_line(t_line *line, t_point p1, t_point p2)
+/*
+** P-05 fix: integer Bresenham setup (all octants). dx is kept positive and
+** dy negative so the classic `err = dx + dy` formulation steps correctly
+** in every direction without any float math or epsilon loop conditions.
+*/
+void	ft_init_line(t_line *line, int x0, int y0, int x1, int y1)
 {
-	line->dx = fabs(p2.x - p1.x);
-	line->dy = fabs(p2.y - p1.y);
-	line->two_dy = 2 * line->dy;
-	line->current_steps = 0.0f;
-	if (line->dx > line->dy)
-		line->param = line->two_dy - line->dx;
+	line->dx = abs(x1 - x0);
+	line->dy = -abs(y1 - y0);
+	line->x1 = x1;
+	line->y1 = y1;
+	line->err = line->dx + line->dy;
+	line->current_steps = 0;
+	if (line->dx > -line->dy)
+		line->total_steps = line->dx;
 	else
-		line->param = 2 * line->dx - line->dy;
-	if (p2.x > p1.x)
+		line->total_steps = -line->dy;
+	if (x1 > x0)
 		line->inc_x = 1;
 	else
 		line->inc_x = -1;
-	if (p2.y > p1.y)
+	if (y1 > y0)
 		line->inc_y = 1;
 	else
 		line->inc_y = -1;
-	if (line->dx > line->dy)
-		line->total_steps = line->dx;
-	else
-		line->total_steps = line->dy;
 	line->color = 0xffffff;
 }
 
-void	ft_put_pixel(t_window *window, float width, float heigth, float color)
+/*
+** L-01 fix: bounds test is now >= on both axes. Valid pixel coordinates
+** are 0..SCREEN_W-1 / 0..SCREEN_H-1; the old `>` test admitted exactly
+** one out-of-range coordinate per axis, writing past the image buffer on
+** the final row (heap corruption).
+** L-10 fix: coordinates and color are int; no float->int conversions.
+*/
+void	ft_put_pixel(t_window *window, int x, int y, int color)
 {
 	char	*dst;
-	int		val;
 
-	if (width < 0 || heigth < 0 || width > SCREEN_W || heigth > SCREEN_H)
+	if (x < 0 || y < 0 || x >= SCREEN_W || y >= SCREEN_H)
 		return ;
-	val = (int)heigth * window->line_length + \
-(int)width * (window->bits_per_pixel / 8);
-	dst = window->addr + val;
-	*(unsigned int *)dst = color;
+	dst = window->addr + \
+(y * window->line_length + x * (window->bits_per_pixel / 8));
+	*(unsigned int *)dst = (unsigned int)color;
 }

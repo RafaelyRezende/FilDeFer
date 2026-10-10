@@ -6,7 +6,7 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 08:38:03 by rluis-ya          #+#    #+#             */
-/*   Updated: 2026/10/10 00:36:26 by jps              ###   ########.fr       */
+/*   Updated: 2026/10/10 by jps (review fixes: L-08, L-11, P-04)             */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,54 +15,67 @@
 static
 void	ft_button_translate(int key, t_env *this)
 {
-	if (key == 119)
+	if (key == XK_w)
 		this->trans_y -= TRANS_STEP_Y;
-	if (key == 115)
+	if (key == XK_s)
 		this->trans_y += TRANS_STEP_Y;
-	if (key == 97)
+	if (key == XK_a)
 		this->trans_x -= TRANS_STEP_X;
-	if (key == 100)
+	if (key == XK_d)
 		this->trans_x += TRANS_STEP_X;
 }
 
+/*
+** L-08 fix: zoom is clamped AFTER the multiplicative step, so the value
+** can never overshoot MAX_ZOOM / MIN_ZOOM (previously 4.9 * 1.1 = 5.39
+** slipped past the gate).
+*/
 static
 void	ft_button_scale(int key, t_env *this)
 {
-	if (key == 113)
+	if (key == XK_q)
 		this->angle += ANGLE_STEP;
-	if (key == 101)
+	if (key == XK_e)
 		this->angle -= ANGLE_STEP;
-	if (key == 109 && this->zoom_scaler < MAX_ZOOM)
-		this->zoom_scaler *= ZOOM_STEP_DOWN;
-	if (key == 110 && this->zoom_scaler > MIN_ZOOM)
-		this->zoom_scaler *= ZOOM_STEP_UP;
+	if (key == XK_m)
+		this->zoom_scaler = fminf(this->zoom_scaler * ZOOM_IN_FACTOR, MAX_ZOOM);
+	if (key == XK_n)
+		this->zoom_scaler = fmaxf(this->zoom_scaler * ZOOM_OUT_FACTOR, MIN_ZOOM);
 }
 
 static
 void	ft_button_toggle(int key, t_env *this)
 {
-	if (key == 61)
+	if (key == XK_equal)
 		this->z_scaler += HEIGHT_STEP;
-	else if (key == 45)
+	else if (key == XK_minus)
 		this->z_scaler -= HEIGHT_STEP;
-	else if (key == 50)
+	else if (key == XK_2)
 		this->is_iso = 0;
-	else if (key == 49)
+	else if (key == XK_1)
 		this->is_iso = 1;
 }
 
+/*
+** L-11 fix: raw numeric keycodes replaced by X11 keysym macros.
+** P-04 fix: any state-mutating key raises needs_redraw so the loop hook
+** redraws exactly once per change instead of every tick.
+*/
 int	ft_keypress(int key, void *param)
 {
 	t_env	*this;
-	
+
 	this = param;
-	if (key == 65307)
+	if (key == XK_Escape)
 		ft_clean_exit(this);
-	if (key == 119 || key == 115 || key == 97 || key == 100)
+	if (key == XK_w || key == XK_s || key == XK_a || key == XK_d)
 		ft_button_translate(key, this);
-	if (key == 113 || key == 101 || key == 109 || key == 110)
+	else if (key == XK_q || key == XK_e || key == XK_m || key == XK_n)
 		ft_button_scale(key, this);
-	if (key == 61 || key == 45 || key == 50 || key == 49)
+	else if (key == XK_equal || key == XK_minus || key == XK_2 || key == XK_1)
 		ft_button_toggle(key, this);
+	else
+		return (0);
+	this->needs_redraw = 1;
 	return (0);
 }

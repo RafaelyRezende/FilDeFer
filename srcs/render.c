@@ -6,93 +6,80 @@
 /*   By: rluis-ya <rluis-ya@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 13:51:22 by rluis-ya          #+#    #+#             */
-/*   Updated: 2025/08/06 20:51:08 by rluis-ya         ###   ########.fr       */
+/*   Updated: 2026/10/10 by jps (review fix: P-05 integer Bresenham)         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iso_fdf.h"
 
-static
-void	ft_octant_dy(t_line *line, t_point *p1)
-{
-	if (line->param < 0)
-		line->param += line->two_dy;
-	else
-	{
-		p1->y += line->inc_y;
-		line->param += line->two_dy - 2 * line->dx;
-	}
-	p1->x += line->inc_x;
-}
-
-static
-void	ft_octant_dx(t_line *line, t_point *p1)
-{
-	if (line->param < 0)
-		line->param += 2 * line->dx;
-	else
-	{
-		p1->x += line->inc_x;
-		line->param += 2 * line->dx - line->two_dy;
-	}
-	p1->y += line->inc_y;
-}
-
-static
-void	ft_line_step(t_line *line, t_point *p1, t_point *p2)
-{
-	line->t = line->current_steps / line->total_steps;
-	line->color = ft_interpolate_color(p1->color, p2->color, line->t);
-}
-
+/*
+** P-05 fix: all-octant integer Bresenham. Endpoints are rounded once to
+** integer screen coordinates; the walk itself uses only integer adds and
+** comparisons, eliminating the float mutation + fabs() > 0.5f loop tests
+** (and their accumulated rounding error) of the previous implementation.
+** Color is interpolated along the dominant axis step count.
+*/
 static
 void	ft_draw_line(t_window *img, t_point p1, t_point p2)
 {
 	t_line	line;
+	int		x;
+	int		y;
+	int		e2;
 
-	ft_init_line(&line, p1, p2);
-	ft_put_pixel(img, p1.x, p1.y, p1.color);
-	if (line.dx > line.dy)
+	x = (int)roundf(p1.x);
+	y = (int)roundf(p1.y);
+	ft_init_line(&line, x, y, (int)roundf(p2.x), (int)roundf(p2.y));
+	while (1)
 	{
-		while (fabs(p1.x - p2.x) > 0.5f)
+		if (line.total_steps > 0)
+			line.t = (float)line.current_steps / (float)line.total_steps;
+		else
+			line.t = 0.0f;
+		line.color = ft_interpolate_color(p1.color, p2.color, line.t);
+		ft_put_pixel(img, x, y, line.color);
+		if (x == line.x1 && y == line.y1)
+			break ;
+		e2 = 2 * line.err;
+		if (e2 >= line.dy)
 		{
-			ft_line_step(&line, &p1, &p2);
-			ft_octant_dy(&line, &p1);
-			line.current_steps++;
-			ft_put_pixel(img, p1.x, p1.y, line.color);
+			line.err += line.dy;
+			x += line.inc_x;
 		}
-	}
-	else
-	{
-		while (fabs(p1.y - p2.y) > 0.5f)
+		if (e2 <= line.dx)
 		{
-			ft_line_step(&line, &p1, &p2);
-			ft_octant_dx(&line, &p1);
-			line.current_steps++;
-			ft_put_pixel(img, p1.x, p1.y, line.color);
+			line.err += line.dx;
+			y += line.inc_y;
 		}
+		line.current_steps++;
 	}
 }
 
+/*
+** V-01 fix: vertices are visited back-to-front via map->order (sorted by
+** ft_sort_order each frame from the depth key computed in ft_iso), instead
+** of fixed row-major order. Row-major only matches the painter's order at
+** the initial orientation; once the model is rotated, far lines were
+** painted over near ones, flattening the perspective.
+*/
 void	ft_connect(t_window *img, t_map *map)
 {
-	int	i;
-	int	j;
+	unsigned int	k;
+	unsigned int	idx;
+	int				i;
+	int				j;
 
-	i = 0;
-	while (i < map->rows)
+	k = 0;
+	while (k < map->size)
 	{
-		j = 0;
-		while (j < map->cols)
-		{
-			if (j + 1 < map->cols)
-				ft_draw_line(img, map->grid[i * map->cols + j], \
-map->grid[i * map->cols + j + 1]);
-			if (i + 1 < map->rows)
-				ft_draw_line(img, map->grid[i * map->cols + j], \
-map->grid[(i + 1) * map->cols + j]);
-			j++;
-		}
-		i++;
+		idx = map->order[k];
+		i = (int)(idx / (unsigned int)map->cols);
+		j = (int)(idx % (unsigned int)map->cols);
+		if (j + 1 < map->cols)
+			ft_draw_line(img, map->grid[idx], map->grid[idx + 1]);
+		if (i + 1 < map->rows)
+			ft_draw_line(img, map->grid[idx], \
+map->grid[idx + (unsigned int)map->cols]);
+		k++;
 	}
 }

@@ -44,6 +44,23 @@ t_quat	ft_quat_mult(t_quat a, t_quat b)
 	return (result);
 }
 
+/*
+** L-09 fix: normalize a quaternion (used to keep the accumulated
+** orientation from drifting over thousands of incremental updates).
+** Falls back to the identity quaternion for degenerate input.
+*/
+t_quat	ft_quat_norm(t_quat q)
+{
+	float	len;
+	float	inv;
+
+	len = sqrtf(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
+	if (len < 1e-8f)
+		return (ft_quat_constructor(1.0f, 0.0f, 0.0f, 0.0f));
+	inv = 1.0f / len;
+	return (ft_quat_constructor(q.w * inv, q.x * inv, q.y * inv, q.z * inv));
+}
+
 t_quat	ft_quat_from_angle(t_vec3 axis, float angle)
 {
 	t_quat	result;

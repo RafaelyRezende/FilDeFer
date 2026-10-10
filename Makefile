@@ -1,59 +1,61 @@
-CC = cc
+## FDF — root Makefile (rewritten: review finding A-04)
+##
+## Fixes vs. previous version:
+##  - compile flags (CFLAGS) and link libraries (LDLIBS) are separated;
+##  - object files are compiled per-source with automatic header dependency
+##    generation (-MMD -MP), so editing iso_fdf.h now triggers a rebuild;
+##  - the minilibx prerequisite matches the linked artifact (libmlx_Linux.a);
+##  - the broken `test` target (undefined PARSER_TEST) and the fake
+##    `unit_test` binary (duplicate of fdf with the same main) are removed;
+##  - fclean/.PHONY are consistent with the actual targets.
 
-CFLAGS = -Wall -Werror -Wextra -O3 -std=gnu89 -Iinclude -Ilibft -Iminilibx-linux -Lminilibx-linux -lmlx_Linux -L/usr/lib  -lXext -lX11 -lm -lz
+NAME		= fdf
 
-CDB = -g #-pg
+CC			= cc
+CDB			= -g
+CFLAGS		= -Wall -Werror -Wextra -O3 -flto -fstrict-aliasing -ffast-math -std=gnu89
+INCLUDES	= -Iinclude -Ilibft -Iminilibx-linux
+LDLIBS		= -Lminilibx-linux -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz
 
-OPTFLAGS = -O3 -flto -fstrict-aliasing -ffast-math ##-march=native -funroll-loops
+SRC_DIR		= srcs
+SRCS		= $(addprefix $(SRC_DIR)/, \
+			  main.c \
+			  parser.c parser_utils.c \
+			  ga_utils.c quaternion.c quaternion_utils.c \
+			  rotation.c render.c line_utils.c sort.c \
+			  colors.c colors_utils.c \
+			  events.c garbage_collection.c)
+OBJS		= $(SRCS:.c=.o)
+DEPS		= $(OBJS:.o=.d)
 
-## FDF
-
-NAME = fdf
-
-MLX = minilibx-linux/libmlx.a
-
-MAIN_SRC = srcs/colors.c srcs/colors_utils.c srcs/ga_utils.c srcs/quaternion.c srcs/quaternion_utils.c srcs/rotation.c srcs/garbage_collection.c srcs/sort.c srcs/render.c srcs/line_utils.c srcs/parser.c srcs/parser_utils.c srcs/events.c srcs/unit_tester.c
-
-OBJS = $(MAIN_SRC:.c=.o)
-
-## Test executable names 
-
-UNIT_TEST = unit_test
-
-## Test srcs
-
-UNIT_SRCS= $(MAIN_SRC)
-
-## Includes
-LIBFT =libft/libft.a
+LIBFT		= libft/libft.a
+MLX			= minilibx-linux/libmlx_Linux.a
 
 all: $(NAME)
 
-test: $(PARSER_TEST)
+$(NAME): $(OBJS) $(LIBFT) $(MLX)
+	$(CC) $(CDB) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBFT) $(LDLIBS) -o $(NAME)
 
-$(UNIT_TEST): $(LIBFT) $(MLX) $(UNIT_SRCS)
-	$(CC) $(CDB) $(OPTFLAGS) $(UNIT_SRCS) $(LIBFT) $(CFLAGS) -o $@
-
-$(NAME): $(LIBFT) $(MLX) $(MAIN_SRC)
-	$(CC) $(CDB) $(OPTFLAGS) $(MAIN_SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
-
-srcs/%.o: srcs/%.c
-	$(CC) -g $(CFLAGS) -o $@ -c $<
+%.o: %.c
+	$(CC) $(CDB) $(CFLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) -C libft
 
 $(MLX):
-	$(MAKE) -C minilibx-linux/
+	$(MAKE) -C minilibx-linux
 
 clean:
-	@rm -rf $(OBJS)
-	$(MAKE) clean -C libft 
+	rm -rf $(OBJS) $(DEPS)
+	$(MAKE) clean -C libft
 	$(MAKE) clean -C minilibx-linux
 
 fclean: clean
-	$(MAKE) -C libft fclean
-	@rm -rf $(NAME)
+	$(MAKE) fclean -C libft
+	rm -rf $(NAME)
+
 re: fclean all
 
-.PHONY: clean fclean re all unit_test
+-include $(DEPS)
+
+.PHONY: all clean fclean re
